@@ -41,7 +41,12 @@ function AuthForm() {
         password,
       });
       if (result.error) {
-        setError(result.error.message ?? "Invalid credentials");
+        const message = result.error.message ?? "Invalid credentials";
+        setError(
+          message.toLowerCase().includes("not found")
+            ? "No account with that email. Switch to Sign up to create one."
+            : message,
+        );
         setLoading(false);
         return;
       }
