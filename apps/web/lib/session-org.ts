@@ -32,16 +32,30 @@ export async function ensureActiveOrganization() {
   }
 
   const baseSlug = slugify(session.user.name || session.user.email.split("@")[0] || "workspace");
-  const slug = `${baseSlug}-${session.user.id.slice(0, 6)}`;
-  const org = await auth.api.createOrganization({
-    headers: requestHeaders,
-    body: {
-      name: `${session.user.name}'s Workspace`,
-      slug,
-    },
-  });
+  const slug = `${baseSlug}-${session.user.id}`;
 
-  return { session, organizationId: org.id };
+  try {
+    const org = await auth.api.createOrganization({
+      headers: requestHeaders,
+      body: {
+        name: `${session.user.name}'s Workspace`,
+        slug,
+      },
+    });
+    return { session, organizationId: org.id };
+  } catch {
+    const retryOrgs = await auth.api.listOrganizations({ headers: requestHeaders });
+    const existing = retryOrgs[0];
+    if (!existing) {
+      throw new Error("Failed to resolve organization");
+    }
+
+    await auth.api.setActiveOrganization({
+      headers: requestHeaders,
+      body: { organizationId: existing.id },
+    });
+    return { session, organizationId: existing.id };
+  }
 }
 
 export async function requireOrganizationId(): Promise<string> {
