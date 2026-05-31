@@ -1,5 +1,5 @@
-import type { IngestItem } from "@sentry-clone/db";
-import { parseDsn } from "./utils";
+import type { IngestItem } from "./ingest-types.js";
+import { parseDsn } from "./utils.js";
 
 const FLUSH_INTERVAL_MS = 2000;
 const MAX_BATCH_SIZE = 20;

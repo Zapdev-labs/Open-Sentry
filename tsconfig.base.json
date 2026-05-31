@@ -16,7 +16,7 @@
     "noEmit": true,
     "paths": {
       "@sentry-clone/db": ["./packages/db/src/index.ts"],
-      "@sentry-clone/sdk": ["./packages/sdk/src/index.ts"]
+      "@zapdev-labs/sentry-clone": ["./packages/sdk/src/index.ts"]
     }
   }
 }

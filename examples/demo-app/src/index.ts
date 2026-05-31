@@ -1,4 +1,4 @@
-import { init, captureException, captureMessage, startTransaction, addBreadcrumb, flush } from "@sentry-clone/sdk";
+import { init, captureException, captureMessage, startTransaction, addBreadcrumb, flush } from "@zapdev-labs/sentry-clone";
 
 const dsn = process.env.DSN;
 if (!dsn) {

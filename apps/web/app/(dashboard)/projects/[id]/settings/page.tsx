@@ -15,7 +15,7 @@ export default async function SettingsPage({ params }: PageProps) {
   if (!project) notFound();
 
   const dsn = buildDsn(project.publicKey);
-  const installCode = `import { init, captureException } from "@sentry-clone/sdk";
+  const installCode = `import { init, captureException } from "@zapdev-labs/sentry-clone";
 
 init({
   dsn: "${dsn}",

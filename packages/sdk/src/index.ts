@@ -1,6 +1,6 @@
-import type { IngestItem } from "@sentry-clone/db";
-import { randomId, parseStack, type Breadcrumb, type SdkOptions } from "./utils";
-import { Transport } from "./transport";
+import type { IngestItem } from "./ingest-types.js";
+import { randomId, parseStack, type Breadcrumb, type SdkOptions } from "./utils.js";
+import { Transport } from "./transport.js";
 
 interface ActiveSpan {
   spanId: string;
@@ -197,5 +197,12 @@ function installNodeExitHandler(): void {
   });
 }
 
-export { parseDsn } from "./utils";
-export type { SdkOptions, Breadcrumb };
+export { parseDsn } from "./utils.js";
+export type { SdkOptions, Breadcrumb } from "./utils.js";
+export type {
+  IngestItem,
+  ErrorIngestItem,
+  TransactionIngestItem,
+  StackFrame,
+  SpanPayload,
+} from "./ingest-types.js";

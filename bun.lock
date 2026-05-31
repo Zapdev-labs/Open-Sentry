@@ -68,7 +68,7 @@
       "name": "demo-app",
       "version": "0.0.1",
       "dependencies": {
-        "@sentry-clone/sdk": "workspace:*",
+        "@zapdev-labs/sentry-clone": "workspace:*",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -90,11 +90,8 @@
       },
     },
     "packages/sdk": {
-      "name": "@sentry-clone/sdk",
+      "name": "@zapdev-labs/sentry-clone",
       "version": "0.1.0",
-      "dependencies": {
-        "@sentry-clone/db": "workspace:*",
-      },
       "devDependencies": {
         "@types/node": "^22.13.4",
         "typescript": "^5.7.3",
@@ -364,8 +361,6 @@
 
     "@sentry-clone/ingest": ["@sentry-clone/ingest@workspace:apps/ingest"],
 
-    "@sentry-clone/sdk": ["@sentry-clone/sdk@workspace:packages/sdk"],
-
     "@sentry-clone/web": ["@sentry-clone/web@workspace:apps/web"],
 
     "@sentry-clone/worker": ["@sentry-clone/worker@workspace:apps/worker"],
@@ -395,6 +390,8 @@
     "@types/react": ["@types/react@19.2.15", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-eRwcGNHve+E8qtEQSSRl6urh+rFop4v8gm6O8rGv25CodbvFdLjA1vVQ1KkiFE0w0UPOnb8tDiFKL5lp0rtY5Q=="],
 
     "@types/react-dom": ["@types/react-dom@19.2.3", "", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ=="],
+
+    "@zapdev-labs/sentry-clone": ["@zapdev-labs/sentry-clone@workspace:packages/sdk"],
 
     "base64-js": ["base64-js@1.5.1", "", {}, "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="],
 
