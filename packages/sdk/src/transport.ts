@@ -42,7 +42,7 @@ export class Transport {
     const body = JSON.stringify(payload);
     const headers = {
       "Content-Type": "application/json",
-      "X-Sentry-Clone-Key": this.publicKey,
+      "X-Open-Sentry-Key": this.publicKey,
     };
 
     if (this.isBrowser && typeof navigator.sendBeacon === "function") {

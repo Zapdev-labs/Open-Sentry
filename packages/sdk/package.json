@@ -1,7 +1,7 @@
 {
   "name": "@zapdev-labs/sentry-clone",
   "version": "0.1.0",
-  "description": "Error and performance monitoring SDK for Sentry Clone",
+  "description": "Error and performance monitoring SDK for Open Sentry",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,

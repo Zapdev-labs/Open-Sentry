@@ -8,6 +8,7 @@ import { UserMenu } from "@/components/user-menu";
 const navLinks = [
   { href: "/", label: "Overview" },
   { href: "/team", label: "Team" },
+  { href: "/docs/overview", label: "Docs" },
 ];
 
 export async function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -24,7 +25,7 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
           <div className="dashboard-header-left">
             <Link href="/" className="dashboard-brand">
               <Bug size={22} weight="bold" />
-              <span>Sentry Clone</span>
+              <span>Open Sentry</span>
             </Link>
             {session && organizations.length > 0 && (
               <OrgSwitcher

@@ -9,7 +9,7 @@ const githubConfigured =
   Boolean(process.env.GITHUB_CLIENT_ID) && Boolean(process.env.GITHUB_CLIENT_SECRET);
 
 export const auth = betterAuth({
-  appName: "Sentry Clone",
+  appName: "Open Sentry",
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL,
   trustedOrigins: [

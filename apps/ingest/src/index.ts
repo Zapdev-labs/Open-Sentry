@@ -12,6 +12,7 @@ app.get("/health", (c) => c.json({ status: "ok" }));
 
 app.post("/v1/ingest", async (c) => {
   const publicKey =
+    c.req.header("X-Open-Sentry-Key") ??
     c.req.header("X-Sentry-Clone-Key") ??
     c.req.query("key") ??
     null;

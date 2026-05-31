@@ -27,7 +27,7 @@ async function sendRequest(): Promise<TimingResult> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Sentry-Clone-Key": PUBLIC_KEY,
+      "X-Open-Sentry-Key": PUBLIC_KEY,
       Connection: "keep-alive",
     },
     body: JSON.stringify(payloadTemplate()),

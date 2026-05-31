@@ -11,8 +11,8 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Sentry Clone",
-  description: "Error and performance monitoring",
+  title: "Open Sentry",
+  description: "Open-source error and performance monitoring",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
