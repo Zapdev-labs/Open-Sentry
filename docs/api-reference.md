@@ -161,6 +161,47 @@ Accepts one ingest item or an array of 1–20 items.
 
 ---
 
+### AI generation item (`type: "ai_generation"`)
+
+Track LLM API usage and cost (PostHog-style `$ai_generation` fields).
+
+```json
+{
+  "type": "ai_generation",
+  "provider": "openrouter",
+  "model": "anthropic/claude-sonnet-4",
+  "inputTokens": 1200,
+  "outputTokens": 340,
+  "totalCostUsd": 0.00482,
+  "latencyMs": 1820,
+  "timeToFirstTokenMs": 420,
+  "status": "ok",
+  "traceId": "trace-abc-123",
+  "tags": { "feature": "chat" },
+  "environment": "production",
+  "timestamp": "2026-05-30T12:00:03.000Z"
+}
+```
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `type` | yes | `"ai_generation"` |
+| `provider` | yes | e.g. `openrouter`, `openai`, `anthropic` |
+| `model` | yes | Model id |
+| `inputTokens` | yes | Prompt tokens |
+| `outputTokens` | no | Completion tokens |
+| `totalCostUsd` | no | Total cost in USD |
+| `inputCostUsd`, `outputCostUsd` | no | Cost breakdown |
+| `latencyMs` | no | End-to-end latency |
+| `timeToFirstTokenMs` | no | Streaming TTFT |
+| `status` | no | `ok` \| `error` (default `ok`) |
+| `traceId`, `spanId` | no | Link to a transaction trace |
+| `tags`, `user`, `metadata` | no | Extra context |
+
+SDK helpers: `captureGeneration()` and `captureOpenRouterGeneration()` in `@zapdev-labs/sentry-clone`.
+
+---
+
 ### Batch example
 
 ```json

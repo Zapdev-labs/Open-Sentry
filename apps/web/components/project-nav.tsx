@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bug, ChartLine, Gear, SquaresFour } from "@phosphor-icons/react/dist/ssr";
+import { Bug, Brain, ChartLine, Gear, SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { getProject } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
 
 interface ProjectNavProps {
   projectId: string;
-  active: "overview" | "issues" | "performance" | "settings";
+  active: "overview" | "issues" | "performance" | "ai" | "settings";
 }
 
 export async function ProjectNav({ projectId, active }: ProjectNavProps) {
@@ -27,6 +27,12 @@ export async function ProjectNav({ projectId, active }: ProjectNavProps) {
       label: "Performance",
       icon: ChartLine,
       key: "performance" as const,
+    },
+    {
+      href: `/projects/${projectId}/ai`,
+      label: "AI",
+      icon: Brain,
+      key: "ai" as const,
     },
     {
       href: `/projects/${projectId}/settings`,

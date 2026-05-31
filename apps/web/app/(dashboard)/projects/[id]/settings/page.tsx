@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { getProject, buildDsn } from "@/lib/queries";
+import { getLinearIntegration } from "@/lib/integrations";
 import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { CopyDsn } from "@/components/copy-dsn";
+import { LinearIntegrationForm } from "@/components/linear-integration-form";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -15,6 +17,7 @@ export default async function SettingsPage({ params }: PageProps) {
   if (!project) notFound();
 
   const dsn = buildDsn(project.publicKey);
+  const linear = await getLinearIntegration(id);
   const installCode = `import { init, captureException } from "@zapdev-labs/sentry-clone";
 
 init({
@@ -60,6 +63,19 @@ try {
         <div className="card fade-in" style={{ marginTop: 24 }}>
           <h3 style={{ fontSize: 16, marginBottom: 8 }}>Public key</h3>
           <code className="code-block">{project.publicKey}</code>
+        </div>
+
+        <div className="card fade-in" style={{ marginTop: 24 }}>
+          <h3 style={{ fontSize: 16, marginBottom: 8 }}>Linear</h3>
+          <p className="meta" style={{ marginBottom: 20 }}>
+            When a new error group appears, a matching issue is created in your Linear team automatically.
+          </p>
+          <LinearIntegrationForm
+            projectId={id}
+            initialEnabled={linear?.enabled ?? false}
+            initialTeamId={linear?.config.teamId ?? ""}
+            initialHasApiKey={linear?.config.hasApiKey ?? false}
+          />
         </div>
     </main>
   );

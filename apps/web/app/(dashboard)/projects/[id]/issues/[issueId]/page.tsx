@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import { getIssue, getIssueEvents, getIssueEventTimeline, getProject } from "@/lib/queries";
+import { getIssueExternalLinks } from "@/lib/integrations";
 import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { IssueActions } from "@/components/issue-actions";
 import { IssueEventExplorer } from "@/components/issue-event-explorer";
 import { IssueTimelineChart } from "@/components/issue-timeline-chart";
+import { IssueExternalLinks } from "@/components/issue-external-links";
 
 interface PageProps {
   params: Promise<{ id: string; issueId: string }>;
@@ -25,9 +27,10 @@ export default async function IssueDetailPage({ params }: PageProps) {
   const issue = await getIssue(issueId);
   if (!issue || issue.projectId !== id) notFound();
 
-  const [eventList, timeline] = await Promise.all([
+  const [eventList, timeline, externalLinks] = await Promise.all([
     getIssueEvents(issueId),
     getIssueEventTimeline(issueId),
+    getIssueExternalLinks(issueId),
   ]);
 
   return (
@@ -46,6 +49,7 @@ export default async function IssueDetailPage({ params }: PageProps) {
             {issue.lastSeen.toLocaleString()}
           </p>
           <IssueActions issueId={issueId} status={issue.status} />
+          <IssueExternalLinks links={externalLinks} />
         </div>
 
         <div className="fade-in" style={{ marginBottom: 32 }}>

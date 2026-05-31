@@ -8,9 +8,14 @@ import {
   events,
   transactions,
   spans,
+  aiGenerations,
   type IngestItem,
   type Database,
 } from "@sentry-clone/db";
+import {
+  syncNewIssuesToIntegrations,
+  type NewIssueForIntegration,
+} from "@sentry-clone/integrations";
 
 export interface IngestJobData {
   projectId: string;
@@ -23,17 +28,23 @@ export async function processBatch(jobs: IngestJobData[]): Promise<void> {
   if (!url) throw new Error("DATABASE_URL is required");
 
   const { db } = createDb(url, 10);
+  const newIssues: NewIssueForIntegration[] = [];
 
   await db.transaction(async (tx) => {
     for (const job of jobs) {
       const item = job.payload;
       if (item.type === "error") {
-        await processError(tx, job.projectId, item, job.receivedAt);
-      } else {
+        const created = await processError(tx, job.projectId, item, job.receivedAt);
+        if (created) newIssues.push(created);
+      } else if (item.type === "transaction") {
         await processTransaction(tx, job.projectId, item, job.receivedAt);
+      } else {
+        await processAiGeneration(tx, job.projectId, item, job.receivedAt);
       }
     }
   });
+
+  await syncNewIssuesToIntegrations(db, newIssues);
 }
 
 type TxClient = Parameters<Parameters<Database["transaction"]>[0]>[0];
@@ -43,7 +54,7 @@ async function processError(
   projectId: string,
   item: Extract<IngestItem, { type: "error" }>,
   receivedAt: string
-): Promise<void> {
+): Promise<NewIssueForIntegration | null> {
   const { fingerprint, title, level } = computeFingerprint(
     item.exception,
     item.message,
@@ -72,9 +83,13 @@ async function processError(
         eventCount: sql`${issues.eventCount} + 1`,
       },
     })
-    .returning({ id: issues.id });
+    .returning({
+      id: issues.id,
+      eventCount: issues.eventCount,
+      title: issues.title,
+    });
 
-  if (!issue) return;
+  if (!issue) return null;
 
   await tx.insert(events).values({
     issueId: issue.id,
@@ -88,6 +103,18 @@ async function processError(
     release: item.release,
     timestamp: now,
   });
+
+  if (issue.eventCount !== 1) return null;
+
+  return {
+    issueId: issue.id,
+    projectId,
+    title: issue.title,
+    message,
+    level,
+    environment: item.environment,
+    release: item.release,
+  };
 }
 
 async function processTransaction(
@@ -123,4 +150,38 @@ async function processTransaction(
       parentSpanId: span.parentSpanId,
     }))
   );
+}
+
+async function processAiGeneration(
+  tx: TxClient,
+  projectId: string,
+  item: Extract<IngestItem, { type: "ai_generation" }>,
+  receivedAt: string
+): Promise<void> {
+  const now = item.timestamp ? new Date(item.timestamp) : new Date(receivedAt);
+  const outputTokens = item.outputTokens ?? 0;
+  const totalTokens = item.totalTokens ?? item.inputTokens + outputTokens;
+
+  await tx.insert(aiGenerations).values({
+    projectId,
+    traceId: item.traceId,
+    spanId: item.spanId,
+    provider: item.provider,
+    model: item.model,
+    inputTokens: item.inputTokens,
+    outputTokens,
+    totalTokens,
+    inputCostUsd: item.inputCostUsd?.toString(),
+    outputCostUsd: item.outputCostUsd?.toString(),
+    totalCostUsd: item.totalCostUsd?.toString(),
+    latencyMs: item.latencyMs,
+    timeToFirstTokenMs: item.timeToFirstTokenMs,
+    status: item.status ?? "ok",
+    tags: item.tags ?? {},
+    user: item.user,
+    metadata: item.metadata,
+    environment: item.environment,
+    release: item.release,
+    timestamp: now,
+  });
 }

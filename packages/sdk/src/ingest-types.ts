@@ -54,4 +54,27 @@ export type TransactionIngestItem = {
   timestamp?: string;
 };
 
-export type IngestItem = ErrorIngestItem | TransactionIngestItem;
+export type AiGenerationIngestItem = {
+  type: "ai_generation";
+  provider: string;
+  model: string;
+  inputTokens: number;
+  outputTokens?: number;
+  totalTokens?: number;
+  inputCostUsd?: number;
+  outputCostUsd?: number;
+  totalCostUsd?: number;
+  latencyMs?: number;
+  timeToFirstTokenMs?: number;
+  status?: "ok" | "error";
+  traceId?: string;
+  spanId?: string;
+  tags?: Record<string, string>;
+  user?: Record<string, string>;
+  metadata?: Record<string, unknown>;
+  environment?: string;
+  release?: string;
+  timestamp?: string;
+};
+
+export type IngestItem = ErrorIngestItem | TransactionIngestItem | AiGenerationIngestItem;

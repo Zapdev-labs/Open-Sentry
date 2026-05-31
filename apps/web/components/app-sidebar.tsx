@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   BookOpen,
+  Brain,
   Bug,
   CaretDoubleLeft,
   ChartLine,
@@ -37,6 +38,12 @@ const iconLinks = [
     match: (p: string) => p.includes("/performance"),
   },
   {
+    href: "#ai",
+    label: "AI",
+    icon: Brain,
+    match: (p: string) => p.includes("/ai"),
+  },
+  {
     href: "#explore",
     label: "Explore",
     icon: Compass,
@@ -59,6 +66,7 @@ const iconLinks = [
 function resolveIconHref(link: (typeof iconLinks)[number], projectId: string | undefined) {
   if (link.href === "#issues" && projectId) return `/projects/${projectId}/issues`;
   if (link.href === "#performance" && projectId) return `/projects/${projectId}/performance`;
+  if (link.href === "#ai" && projectId) return `/projects/${projectId}/ai`;
   if (link.href === "#explore" && projectId) return `/projects/${projectId}/overview`;
   if (link.href.startsWith("#")) return projectId ? `/projects/${projectId}/overview` : "/";
   return link.href;
@@ -189,6 +197,12 @@ function ProjectPanel({ projectId, projectName }: { projectId: string; projectNa
       label: "Performance",
       icon: ChartLine,
       active: pathname.includes("/performance"),
+    },
+    {
+      href: `/projects/${projectId}/ai`,
+      label: "AI analytics",
+      icon: Brain,
+      active: pathname.includes("/ai"),
     },
     {
       href: `/projects/${projectId}/settings`,

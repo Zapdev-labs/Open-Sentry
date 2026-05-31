@@ -9,6 +9,12 @@ import {
 import { getScope, setUser, setTag, setTags, clearScope } from "./scope.js";
 import { installBreadcrumbIntegrations } from "./integrations.js";
 import { Transport } from "./transport.js";
+import {
+  buildGenerationItem,
+  usageFromOpenRouter,
+  type CaptureGenerationOptions,
+  type OpenRouterUsage,
+} from "./ai-tracking.js";
 
 interface ActiveSpan {
   spanId: string;
@@ -204,6 +210,28 @@ export async function flush(): Promise<void> {
   await transport?.flush();
 }
 
+export function captureGeneration(opts: CaptureGenerationOptions): void {
+  if (!transport) return;
+
+  const item = buildGenerationItem(opts, getScope(), {
+    environment: options.environment,
+    release: options.release,
+  });
+  transport.enqueue(item);
+}
+
+export function captureOpenRouterGeneration(
+  usage: OpenRouterUsage,
+  model: string,
+  extras?: Omit<CaptureGenerationOptions, "provider" | "model" | "inputTokens"> & {
+    latencyMs?: number;
+    timeToFirstTokenMs?: number;
+  }
+): void {
+  const base = usageFromOpenRouter(usage, model);
+  captureGeneration({ ...base, ...extras });
+}
+
 function installGlobalHandlers(): void {
   if (globalHandlersInstalled) return;
   globalHandlersInstalled = true;
@@ -242,6 +270,8 @@ export type {
   IngestItem,
   ErrorIngestItem,
   TransactionIngestItem,
+  AiGenerationIngestItem,
   StackFrame,
   SpanPayload,
 } from "./ingest-types.js";
+export type { CaptureGenerationOptions, OpenRouterUsage } from "./ai-tracking.js";

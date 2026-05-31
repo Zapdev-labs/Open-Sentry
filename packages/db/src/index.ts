@@ -31,3 +31,4 @@ export * from "./schema";
 export * from "./grouping";
 export * from "./ingest-types";
 export * from "./lookup";
+export * from "./integration-types";

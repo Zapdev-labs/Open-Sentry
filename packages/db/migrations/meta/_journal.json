@@ -15,6 +15,20 @@
       "when": 1748726400000,
       "tag": "0001_auth_and_orgs",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748812800000,
+      "tag": "0002_ai_generations",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1748899200000,
+      "tag": "0003_integrations",
+      "breakpoints": true
     }
   ]
 }

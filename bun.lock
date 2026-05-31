@@ -34,6 +34,7 @@
       "dependencies": {
         "@phosphor-icons/react": "^2.1.7",
         "@sentry-clone/db": "workspace:*",
+        "@sentry-clone/integrations": "workspace:*",
         "better-auth": "^1.6.12",
         "drizzle-orm": "^0.39.3",
         "geist": "^1.3.1",
@@ -58,6 +59,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@sentry-clone/db": "workspace:*",
+        "@sentry-clone/integrations": "workspace:*",
         "bullmq": "^5.41.2",
         "drizzle-orm": "^0.39.3",
         "ioredis": "^5.5.0",
@@ -89,6 +91,18 @@
       "devDependencies": {
         "@types/node": "^22.13.4",
         "drizzle-kit": "^0.30.4",
+        "typescript": "^5.7.3",
+      },
+    },
+    "packages/integrations": {
+      "name": "@sentry-clone/integrations",
+      "version": "0.1.0",
+      "dependencies": {
+        "@sentry-clone/db": "workspace:*",
+        "drizzle-orm": "^0.39.3",
+      },
+      "devDependencies": {
+        "@types/node": "^22.13.4",
         "typescript": "^5.7.3",
       },
     },
@@ -363,6 +377,8 @@
     "@sentry-clone/db": ["@sentry-clone/db@workspace:packages/db"],
 
     "@sentry-clone/ingest": ["@sentry-clone/ingest@workspace:apps/ingest"],
+
+    "@sentry-clone/integrations": ["@sentry-clone/integrations@workspace:packages/integrations"],
 
     "@sentry-clone/web": ["@sentry-clone/web@workspace:apps/web"],
 

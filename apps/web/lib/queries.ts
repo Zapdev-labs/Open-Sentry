@@ -1,4 +1,4 @@
-import { getDb, projects, issues, events, transactions, spans } from "@sentry-clone/db";
+import { getDb, projects, issues, events, transactions, spans, aiGenerations } from "@sentry-clone/db";
 import { eq, desc, and, lt, sql, gte, count, inArray } from "drizzle-orm";
 
 export function db() {
@@ -317,4 +317,126 @@ export function buildDsn(publicKey: string): string {
   const ingestUrl = process.env.NEXT_PUBLIC_INGEST_URL ?? "http://localhost:3001";
   const host = ingestUrl.replace(/^https?:\/\//, "");
   return `https://${publicKey}@${host}/v1/ingest`;
+}
+
+function parseUsd(value: string | null | undefined): number {
+  if (!value) return 0;
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+export async function getAiGenerations(projectId: string, limit = 50) {
+  return db()
+    .select()
+    .from(aiGenerations)
+    .where(eq(aiGenerations.projectId, projectId))
+    .orderBy(desc(aiGenerations.timestamp))
+    .limit(limit);
+}
+
+export async function getAiGenerationStats(projectId: string): Promise<{
+  count: number;
+  totalCostUsd: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  avgLatencyMs: number;
+  errorRate: number;
+}> {
+  const [stats] = await db()
+    .select({
+      count: sql<number>`count(*)::int`.mapWith(Number),
+      totalInputTokens: sql<number>`coalesce(sum(${aiGenerations.inputTokens}), 0)::int`.mapWith(Number),
+      totalOutputTokens: sql<number>`coalesce(sum(${aiGenerations.outputTokens}), 0)::int`.mapWith(Number),
+      avgLatencyMs: sql<number>`coalesce(avg(${aiGenerations.latencyMs}), 0)::int`.mapWith(Number),
+      errorCount: sql<number>`count(*) filter (where ${aiGenerations.status} = 'error')::int`.mapWith(Number),
+      totalCostUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
+    })
+    .from(aiGenerations)
+    .where(eq(aiGenerations.projectId, projectId));
+
+  const count = stats?.count ?? 0;
+  const errorCount = stats?.errorCount ?? 0;
+
+  return {
+    count,
+    totalCostUsd: parseUsd(stats?.totalCostUsd),
+    totalInputTokens: stats?.totalInputTokens ?? 0,
+    totalOutputTokens: stats?.totalOutputTokens ?? 0,
+    avgLatencyMs: stats?.avgLatencyMs ?? 0,
+    errorRate: count > 0 ? Math.round((errorCount / count) * 100) : 0,
+  };
+}
+
+export async function getAiGenerationStatsToday(projectId: string): Promise<{
+  count: number;
+  totalCostUsd: number;
+}> {
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  const [stats] = await db()
+    .select({
+      count: sql<number>`count(*)::int`.mapWith(Number),
+      totalCostUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
+    })
+    .from(aiGenerations)
+    .where(and(eq(aiGenerations.projectId, projectId), gte(aiGenerations.timestamp, dayAgo)));
+
+  return {
+    count: stats?.count ?? 0,
+    totalCostUsd: parseUsd(stats?.totalCostUsd),
+  };
+}
+
+export async function getAiGenerationByModel(projectId: string): Promise<
+  { model: string; provider: string; count: number; totalCostUsd: number; totalTokens: number }[]
+> {
+  const rows = await db()
+    .select({
+      model: aiGenerations.model,
+      provider: aiGenerations.provider,
+      count: sql<number>`count(*)::int`.mapWith(Number),
+      totalCostUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
+      totalTokens: sql<number>`coalesce(sum(${aiGenerations.totalTokens}), 0)::int`.mapWith(Number),
+    })
+    .from(aiGenerations)
+    .where(eq(aiGenerations.projectId, projectId))
+    .groupBy(aiGenerations.model, aiGenerations.provider)
+    .orderBy(sql`sum(${aiGenerations.totalCostUsd}::numeric) desc nulls last`);
+
+  return rows.map((row) => ({
+    model: row.model,
+    provider: row.provider,
+    count: row.count,
+    totalCostUsd: parseUsd(row.totalCostUsd),
+    totalTokens: row.totalTokens,
+  }));
+}
+
+export async function getAiCostTimeline(projectId: string): Promise<{ date: string; costUsd: number; count: number }[]> {
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const rows = await db()
+    .select({
+      day: sql<string>`date_trunc('day', ${aiGenerations.timestamp})::date::text`,
+      costUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
+      count: count(aiGenerations.id).mapWith(Number),
+    })
+    .from(aiGenerations)
+    .where(and(eq(aiGenerations.projectId, projectId), gte(aiGenerations.timestamp, weekAgo)))
+    .groupBy(sql`date_trunc('day', ${aiGenerations.timestamp})`)
+    .orderBy(sql`date_trunc('day', ${aiGenerations.timestamp})`);
+
+  const costsByDay = new Map(rows.map((r) => [r.day, { costUsd: parseUsd(r.costUsd), count: r.count }]));
+  const points: { date: string; costUsd: number; count: number }[] = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    d.setHours(0, 0, 0, 0);
+    const key = d.toISOString().slice(0, 10);
+    const point = costsByDay.get(key);
+    points.push({ date: key, costUsd: point?.costUsd ?? 0, count: point?.count ?? 0 });
+  }
+
+  return points;
 }

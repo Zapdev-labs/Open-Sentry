@@ -62,9 +62,33 @@ export const transactionPayloadSchema = z.object({
   timestamp: z.string().optional(),
 });
 
+export const aiGenerationPayloadSchema = z.object({
+  type: z.literal("ai_generation"),
+  provider: z.string().min(1),
+  model: z.string().min(1),
+  inputTokens: z.number().int().nonnegative(),
+  outputTokens: z.number().int().nonnegative().optional(),
+  totalTokens: z.number().int().nonnegative().optional(),
+  inputCostUsd: z.number().nonnegative().optional(),
+  outputCostUsd: z.number().nonnegative().optional(),
+  totalCostUsd: z.number().nonnegative().optional(),
+  latencyMs: z.number().int().nonnegative().optional(),
+  timeToFirstTokenMs: z.number().int().nonnegative().optional(),
+  status: z.enum(["ok", "error"]).optional(),
+  traceId: z.string().optional(),
+  spanId: z.string().optional(),
+  tags: z.record(z.string()).optional(),
+  user: z.record(z.string()).optional(),
+  metadata: z.record(z.unknown()).optional(),
+  environment: z.string().optional(),
+  release: z.string().optional(),
+  timestamp: z.string().optional(),
+});
+
 export const ingestItemSchema = z.discriminatedUnion("type", [
   errorPayloadSchema,
   transactionPayloadSchema,
+  aiGenerationPayloadSchema,
 ]);
 
 export const ingestPayloadSchema = z.union([
