@@ -1,0 +1,29 @@
+{
+  "name": "sentry-clone",
+  "private": true,
+  "packageManager": "bun@1.3.13",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --filter=@sentry-clone/web --filter=@sentry-clone/ingest --filter=@sentry-clone/worker",
+    "dev:ingest": "turbo run dev --filter=@sentry-clone/ingest",
+    "dev:worker": "turbo run dev --filter=@sentry-clone/worker",
+    "dev:web": "turbo run dev --filter=@sentry-clone/web",
+    "db:generate": "bun run --filter @sentry-clone/db generate",
+    "db:migrate": "bun run scripts/migrate.ts",
+    "db:seed": "bun run --filter @sentry-clone/db seed",
+    "test:smoke": "bun run scripts/smoke-test.ts",
+    "test:load": "bun run scripts/load-test.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "turbo": "^2.9.16"
+  }
+}

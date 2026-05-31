@@ -1,0 +1,21 @@
+{
+  "name": "@sentry-clone/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sentry-clone/db": "workspace:*",
+    "bullmq": "^5.41.2",
+    "drizzle-orm": "^0.39.3",
+    "ioredis": "^5.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "0001_auth_and_orgs",
+  "prevId": "0000_initial",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {},
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
