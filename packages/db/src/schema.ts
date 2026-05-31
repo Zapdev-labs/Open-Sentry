@@ -121,6 +121,11 @@ export interface StackFrame {
   lineno?: number;
   colno?: number;
   inApp?: boolean;
+  module?: string;
+  absPath?: string;
+  contextLine?: string;
+  preContext?: string[];
+  postContext?: string[];
 }
 
 export interface Breadcrumb {
@@ -128,6 +133,8 @@ export interface Breadcrumb {
   message?: string;
   level?: string;
   timestamp?: string;
+  type?: string;
+  data?: Record<string, unknown>;
 }
 
 export type Project = typeof projects.$inferSelect;

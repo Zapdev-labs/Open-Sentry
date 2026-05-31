@@ -1,4 +1,13 @@
-import { init, captureException, captureMessage, startTransaction, addBreadcrumb, flush } from "@zapdev-labs/sentry-clone";
+import {
+  init,
+  captureException,
+  captureMessage,
+  startTransaction,
+  addBreadcrumb,
+  setUser,
+  setTag,
+  flush,
+} from "@zapdev-labs/sentry-clone";
 
 const dsn = process.env.DSN;
 if (!dsn) {
@@ -12,15 +21,21 @@ init({
   release: "demo@1.0.0",
   sampleRate: 1.0,
   tracesSampleRate: 1.0,
+  enableBreadcrumbs: true,
 });
 
-addBreadcrumb({ category: "demo", message: "Demo app started", level: "info" });
+setUser({ id: "demo-user-42", email: "dev@example.com", username: "demo-dev" });
+setTag("feature", "checkout");
+setTag("version", "1.0.0");
+
+addBreadcrumb({ category: "demo", message: "Demo app started", level: "info", type: "default" });
+console.info("Checkout flow initialized");
 
 console.log("Sending demo error...");
 captureException(new Error("Demo error from demo-app"));
 
 console.log("Sending demo message...");
-captureMessage("Demo message captured", "info");
+captureMessage("Demo message captured", "warning");
 
 console.log("Sending demo transaction...");
 const tx = startTransaction("demo-checkout");

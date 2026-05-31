@@ -236,7 +236,7 @@ export async function updateIssueStatus(
   return updated;
 }
 
-export async function getIssueEvents(issueId: string, cursor?: string, limit = 20) {
+export async function getIssueEvents(issueId: string, cursor?: string, limit = 50) {
   const conditions = cursor
     ? and(eq(events.issueId, issueId), lt(events.timestamp, new Date(cursor)))
     : eq(events.issueId, issueId);
@@ -247,6 +247,35 @@ export async function getIssueEvents(issueId: string, cursor?: string, limit = 2
     .where(conditions)
     .orderBy(desc(events.timestamp))
     .limit(limit);
+}
+
+export async function getIssueEventTimeline(issueId: string): Promise<
+  { date: string; count: number }[]
+> {
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const rows = await db()
+    .select({
+      day: sql<string>`date_trunc('day', ${events.timestamp})::date::text`,
+      count: count(events.id).mapWith(Number),
+    })
+    .from(events)
+    .where(and(eq(events.issueId, issueId), gte(events.timestamp, weekAgo)))
+    .groupBy(sql`date_trunc('day', ${events.timestamp})`)
+    .orderBy(sql`date_trunc('day', ${events.timestamp})`);
+
+  const countsByDay = new Map(rows.map((r) => [r.day, r.count]));
+  const points: { date: string; count: number }[] = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    d.setHours(0, 0, 0, 0);
+    const key = d.toISOString().slice(0, 10);
+    points.push({ date: key, count: countsByDay.get(key) ?? 0 });
+  }
+
+  return points;
 }
 
 export async function getTransactions(projectId: string, limit = 50) {

@@ -1,52 +1,19 @@
 import { notFound } from "next/navigation";
-import type { StackFrame, Breadcrumb } from "@sentry-clone/db";
-import { getIssue, getIssueEvents, getProject } from "@/lib/queries";
+import { getIssue, getIssueEvents, getIssueEventTimeline, getProject } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
 import { ProjectNav } from "@/components/project-nav";
 import { IssueActions } from "@/components/issue-actions";
+import { IssueEventExplorer } from "@/components/issue-event-explorer";
+import { IssueTimelineChart } from "@/components/issue-timeline-chart";
 
 interface PageProps {
   params: Promise<{ id: string; issueId: string }>;
 }
 
-function StackPanel({ frames }: { frames: StackFrame[] }) {
-  if (frames.length === 0) {
-    return <p className="meta">No stack trace available.</p>;
-  }
-
-  return (
-    <div className="stack-trace">
-      {frames.map((frame, i) => (
-        <div key={i} className="stack-frame">
-          <span className="code-block">
-            {frame.function ?? "anonymous"}
-          </span>
-          {" at "}
-          {frame.filename ?? "unknown"}
-          {frame.lineno != null && `:${frame.lineno}`}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function BreadcrumbPanel({ crumbs }: { crumbs: Breadcrumb[] }) {
-  if (crumbs.length === 0) {
-    return <p className="meta">No breadcrumbs recorded.</p>;
-  }
-
-  return (
-    <ul className="breadcrumb-timeline">
-      {crumbs.map((crumb, i) => (
-        <li key={i} className="breadcrumb-item">
-          <span className="meta" style={{ fontSize: 12 }}>
-            {crumb.category ?? "default"}
-          </span>
-          <div>{crumb.message ?? "—"}</div>
-        </li>
-      ))}
-    </ul>
-  );
+function levelBadgeClass(level: string): string {
+  if (level === "error" || level === "fatal") return "badge-level-error";
+  if (level === "warning") return "badge-level-warning";
+  return "badge-level-info";
 }
 
 export default async function IssueDetailPage({ params }: PageProps) {
@@ -58,20 +25,20 @@ export default async function IssueDetailPage({ params }: PageProps) {
   const issue = await getIssue(issueId);
   if (!issue || issue.projectId !== id) notFound();
 
-  const eventList = await getIssueEvents(issueId);
-  const latestEvent = eventList[0];
+  const [eventList, timeline] = await Promise.all([
+    getIssueEvents(issueId),
+    getIssueEventTimeline(issueId),
+  ]);
 
   return (
     <main>
       <ProjectNav projectId={id} active="issues" />
 
-      <section className="container" style={{ paddingBottom: 64 }}>
+      <section className="container container-wide" style={{ paddingBottom: 64 }}>
         <div className="fade-in" style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
             <span className={`badge badge-${issue.status}`}>{issue.status}</span>
-            <span className={`badge badge-level-${issue.level === "error" ? "error" : "info"}`}>
-              {issue.level}
-            </span>
+            <span className={`badge ${levelBadgeClass(issue.level)}`}>{issue.level}</span>
           </div>
           <h2 style={{ fontSize: 28 }}>{issue.title}</h2>
           <p className="meta" style={{ marginTop: 8 }}>
@@ -81,44 +48,14 @@ export default async function IssueDetailPage({ params }: PageProps) {
           <IssueActions issueId={issueId} status={issue.status} />
         </div>
 
-        {latestEvent && (
-          <div className="two-col fade-in">
-            <div>
-              <h3 style={{ fontSize: 18, marginBottom: 16 }}>Stack trace</h3>
-              <StackPanel frames={latestEvent.stack} />
-            </div>
-            <div>
-              <h3 style={{ fontSize: 18, marginBottom: 16 }}>Breadcrumbs</h3>
-              <div className="card" style={{ padding: 20 }}>
-                <BreadcrumbPanel crumbs={latestEvent.breadcrumbs} />
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="fade-in" style={{ marginBottom: 32 }}>
+          <IssueTimelineChart points={timeline} total={issue.eventCount} />
+        </div>
 
-        {eventList.length > 1 && (
-          <div className="fade-in" style={{ marginTop: 48 }}>
-            <h3 style={{ fontSize: 18, marginBottom: 16 }}>Recent events</h3>
-            <table className="table-editorial">
-              <thead>
-                <tr>
-                  <th>Message</th>
-                  <th>Environment</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {eventList.slice(1).map((event) => (
-                  <tr key={event.id}>
-                    <td>{event.message}</td>
-                    <td className="meta">{event.environment ?? "—"}</td>
-                    <td className="meta">{event.timestamp.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div className="fade-in">
+          <h3 style={{ fontSize: 18, marginBottom: 16 }}>Event details</h3>
+          <IssueEventExplorer events={eventList} />
+        </div>
       </section>
     </main>
   );

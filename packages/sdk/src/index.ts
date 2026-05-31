@@ -1,5 +1,13 @@
 import type { IngestItem } from "./ingest-types.js";
-import { randomId, parseStack, type Breadcrumb, type SdkOptions } from "./utils.js";
+import {
+  randomId,
+  parseStack,
+  levelFromExceptionType,
+  type Breadcrumb,
+  type SdkOptions,
+} from "./utils.js";
+import { getScope, setUser, setTag, setTags, clearScope } from "./scope.js";
+import { installBreadcrumbIntegrations } from "./integrations.js";
 import { Transport } from "./transport.js";
 
 interface ActiveSpan {
@@ -19,15 +27,19 @@ interface ActiveTransaction {
 }
 
 let transport: Transport | null = null;
-let options: Required<Pick<SdkOptions, "environment" | "release" | "sampleRate" | "tracesSampleRate" | "maxBreadcrumbs">> = {
+let options: Required<
+  Pick<SdkOptions, "environment" | "release" | "sampleRate" | "tracesSampleRate" | "maxBreadcrumbs" | "enableBreadcrumbs">
+> = {
   environment: "production",
   release: "unknown",
   sampleRate: 1.0,
   tracesSampleRate: 0.1,
   maxBreadcrumbs: 50,
+  enableBreadcrumbs: true,
 };
 const breadcrumbs: Breadcrumb[] = [];
 let globalHandlersInstalled = false;
+let integrationsInstalled = false;
 
 export function init(opts: SdkOptions): void {
   if (!opts.dsn) throw new Error("DSN is required");
@@ -38,9 +50,19 @@ export function init(opts: SdkOptions): void {
     sampleRate: opts.sampleRate ?? 1.0,
     tracesSampleRate: opts.tracesSampleRate ?? 0.1,
     maxBreadcrumbs: opts.maxBreadcrumbs ?? 50,
+    enableBreadcrumbs: opts.enableBreadcrumbs ?? true,
   };
   installGlobalHandlers();
   installNodeExitHandler();
+  if (options.enableBreadcrumbs) {
+    installIntegrations();
+  }
+}
+
+function installIntegrations(): void {
+  if (integrationsInstalled) return;
+  integrationsInstalled = true;
+  installBreadcrumbIntegrations(addBreadcrumb);
 }
 
 export function addBreadcrumb(crumb: Breadcrumb): void {
@@ -53,41 +75,59 @@ export function addBreadcrumb(crumb: Breadcrumb): void {
   }
 }
 
+function buildErrorItem(
+  exception: {
+    type?: string;
+    value?: string;
+    stacktrace?: { frames?: ReturnType<typeof parseStack> };
+  },
+  level?: "fatal" | "error" | "warning" | "info" | "debug"
+): Extract<IngestItem, { type: "error" }> {
+  const scope = getScope();
+  return {
+    type: "error",
+    exception,
+    level: level ?? levelFromExceptionType(exception.type),
+    breadcrumbs: [...breadcrumbs],
+    tags: Object.keys(scope.tags).length > 0 ? scope.tags : undefined,
+    user: scope.user
+      ? Object.fromEntries(
+          Object.entries(scope.user).filter((entry): entry is [string, string] => entry[1] != null)
+        )
+      : undefined,
+    environment: options.environment,
+    release: options.release,
+    timestamp: new Date().toISOString(),
+  };
+}
+
 export function captureException(error: unknown): void {
   if (!transport) return;
   if (Math.random() > options.sampleRate) return;
 
   const err = error instanceof Error ? error : new Error(String(error));
-  const item: IngestItem = {
-    type: "error",
-    exception: {
-      type: err.name,
-      value: err.message,
-      stacktrace: { frames: parseStack(err) },
-    },
-    breadcrumbs: [...breadcrumbs],
-    environment: options.environment,
-    release: options.release,
-    timestamp: new Date().toISOString(),
-  };
+  const item = buildErrorItem({
+    type: err.name,
+    value: err.message,
+    stacktrace: { frames: parseStack(err) },
+  });
   transport.enqueue(item);
 }
 
-export function captureMessage(message: string, level: "info" | "warning" | "error" = "info"): void {
+export function captureMessage(
+  message: string,
+  level: "info" | "warning" | "error" = "info"
+): void {
   if (!transport) return;
   if (Math.random() > options.sampleRate) return;
 
-  const item: IngestItem = {
-    type: "error",
-    exception: {
+  const item = buildErrorItem(
+    {
       type: level,
       value: message,
     },
-    breadcrumbs: [...breadcrumbs],
-    environment: options.environment,
-    release: options.release,
-    timestamp: new Date().toISOString(),
-  };
+    level
+  );
   transport.enqueue(item);
 }
 
@@ -153,10 +193,7 @@ export function startTransaction(name: string): TransactionHandle {
 
       return {
         finish() {
-          const active = activeSpans.get(spanId);
-          if (active) {
-            activeSpans.delete(spanId);
-          }
+          activeSpans.delete(spanId);
         },
       };
     },
@@ -198,7 +235,9 @@ function installNodeExitHandler(): void {
 }
 
 export { parseDsn } from "./utils.js";
+export { setUser, setTag, setTags, clearScope } from "./scope.js";
 export type { SdkOptions, Breadcrumb } from "./utils.js";
+export type { UserContext } from "./scope.js";
 export type {
   IngestItem,
   ErrorIngestItem,

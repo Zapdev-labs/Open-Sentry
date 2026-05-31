@@ -3,6 +3,7 @@ import {
   createDb,
   computeFingerprint,
   normalizeStackFrames,
+  normalizeBreadcrumbs,
   issues,
   events,
   transactions,
@@ -43,9 +44,14 @@ async function processError(
   item: Extract<IngestItem, { type: "error" }>,
   receivedAt: string
 ): Promise<void> {
-  const { fingerprint, title, level } = computeFingerprint(item.exception, item.message);
+  const { fingerprint, title, level } = computeFingerprint(
+    item.exception,
+    item.message,
+    item.level
+  );
   const now = item.timestamp ? new Date(item.timestamp) : new Date(receivedAt);
   const stackFrames = normalizeStackFrames(item.exception.stacktrace?.frames);
+  const breadcrumbList = normalizeBreadcrumbs(item.breadcrumbs);
   const message = item.exception.value ?? item.message ?? "Unknown error";
 
   const [issue] = await tx
@@ -54,7 +60,7 @@ async function processError(
       projectId,
       fingerprint,
       title,
-      level: level as "error",
+      level,
       firstSeen: now,
       lastSeen: now,
       eventCount: 1,
@@ -75,7 +81,7 @@ async function processError(
     projectId,
     message,
     stack: stackFrames,
-    breadcrumbs: item.breadcrumbs ?? [],
+    breadcrumbs: breadcrumbList,
     tags: item.tags ?? {},
     user: item.user,
     environment: item.environment,

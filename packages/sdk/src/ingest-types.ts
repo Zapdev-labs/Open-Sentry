@@ -4,6 +4,8 @@ export type StackFrame = {
   lineno?: number;
   colno?: number;
   inApp?: boolean;
+  module?: string;
+  absPath?: string;
 };
 
 export type BreadcrumbPayload = {
@@ -11,6 +13,8 @@ export type BreadcrumbPayload = {
   message?: string;
   level?: string;
   timestamp?: string;
+  type?: string;
+  data?: Record<string, unknown>;
 };
 
 export type SpanPayload = {
@@ -29,6 +33,7 @@ export type ErrorIngestItem = {
     stacktrace?: { frames?: StackFrame[] };
   };
   message?: string;
+  level?: "fatal" | "error" | "warning" | "info" | "debug";
   breadcrumbs?: BreadcrumbPayload[];
   tags?: Record<string, string>;
   user?: Record<string, string>;

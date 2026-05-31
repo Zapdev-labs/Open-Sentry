@@ -6,6 +6,11 @@ const stackFrameSchema = z.object({
   lineno: z.number().optional(),
   colno: z.number().optional(),
   inApp: z.boolean().optional(),
+  module: z.string().optional(),
+  absPath: z.string().optional(),
+  contextLine: z.string().optional(),
+  preContext: z.array(z.string()).optional(),
+  postContext: z.array(z.string()).optional(),
 });
 
 const breadcrumbSchema = z.object({
@@ -13,6 +18,8 @@ const breadcrumbSchema = z.object({
   message: z.string().optional(),
   level: z.string().optional(),
   timestamp: z.string().optional(),
+  type: z.string().optional(),
+  data: z.record(z.unknown()).optional(),
 });
 
 const spanSchema = z.object({
@@ -30,12 +37,13 @@ export const errorPayloadSchema = z.object({
     value: z.string().optional(),
     stacktrace: z
       .object({
-        frames: z.array(stackFrameSchema).optional(),
+        frames: z.array(stackFrameSchema).max(100).optional(),
       })
       .optional(),
   }),
   message: z.string().optional(),
-  breadcrumbs: z.array(breadcrumbSchema).optional(),
+  level: z.enum(["fatal", "error", "warning", "info", "debug"]).optional(),
+  breadcrumbs: z.array(breadcrumbSchema).max(100).optional(),
   tags: z.record(z.string()).optional(),
   user: z.record(z.string()).optional(),
   environment: z.string().optional(),
