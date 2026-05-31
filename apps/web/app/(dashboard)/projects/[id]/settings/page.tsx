@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProject, buildDsn } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
-import { ProjectNav } from "@/components/project-nav";
+import { PageHeaderBar } from "@/components/page-header-bar";
 import { CopyDsn } from "@/components/copy-dsn";
 
 interface PageProps {
@@ -30,11 +30,10 @@ try {
 }`;
 
   return (
-    <main>
-      <ProjectNav projectId={id} active="settings" />
+    <main className="dash-page">
+      <PageHeaderBar title="Settings" />
 
-      <section className="container" style={{ paddingBottom: 64 }}>
-        <div className="fade-in" style={{ marginBottom: 32 }}>
+      <div className="fade-in" style={{ marginTop: 24, marginBottom: 32 }}>
           <h2 style={{ fontSize: 24, marginBottom: 8 }}>Project settings</h2>
           <p className="meta">Configure your SDK with the DSN below.</p>
         </div>
@@ -62,7 +61,6 @@ try {
           <h3 style={{ fontSize: 16, marginBottom: 8 }}>Public key</h3>
           <code className="code-block">{project.publicKey}</code>
         </div>
-      </section>
     </main>
   );
 }

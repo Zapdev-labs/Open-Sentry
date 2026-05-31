@@ -17,18 +17,15 @@ export default async function TeamPage() {
   if (!org) notFound();
 
   return (
-    <main>
-      <header className="container page-header fade-in">
-        <Link href="/" className="meta" style={{ fontSize: 13, display: "block", marginBottom: 8 }}>
-          Overview
-        </Link>
-        <h1 style={{ fontSize: 36 }}>Team</h1>
-        <p className="meta" style={{ marginTop: 12 }}>
-          Manage members and invitations for {org.name}.
-        </p>
+    <main className="dash-page">
+      <header className="dash-page-header fade-in">
+        <h1 className="dash-page-title">Team</h1>
       </header>
+      <p className="meta fade-in" style={{ marginBottom: 24 }}>
+        Manage members and invitations for {org.name}.
+      </p>
 
-      <section className="container" style={{ paddingBottom: 64 }}>
+      <section style={{ paddingBottom: 64 }}>
         <div className="two-col">
           <div className="card fade-in">
             <h2 style={{ fontSize: 20, marginBottom: 16 }}>Members</h2>

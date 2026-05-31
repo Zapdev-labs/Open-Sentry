@@ -23,15 +23,15 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main>
-      <header className="container page-header fade-in">
-        <h1 style={{ fontSize: 42 }}>Overview</h1>
-        <p className="meta" style={{ marginTop: 12 }}>
-          Workspace health across all projects in the last 24 hours.
-        </p>
+    <main className="dash-page">
+      <header className="dash-page-header fade-in">
+        <h1 className="dash-page-title">Overview</h1>
       </header>
+      <p className="meta fade-in" style={{ marginBottom: 24 }}>
+        Workspace health across all projects in the last 24 hours.
+      </p>
 
-      <section className="container" style={{ paddingBottom: 48 }}>
+      <section style={{ paddingBottom: 48 }}>
         <div className="stats-grid fade-in" style={{ marginBottom: 32 }}>
           <div className="card stat-card">
             <div className="stat-value">{stats.projectCount}</div>

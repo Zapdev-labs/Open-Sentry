@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProject, getTransactions, getTransactionStats, getTransactionSpans } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
-import { ProjectNav } from "@/components/project-nav";
+import { PageHeaderBar } from "@/components/page-header-bar";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -19,11 +19,10 @@ export default async function PerformancePage({ params }: PageProps) {
   const spanList = latestTx ? await getTransactionSpans(latestTx.id) : [];
 
   return (
-    <main>
-      <ProjectNav projectId={id} active="performance" />
+    <main className="dash-page">
+      <PageHeaderBar title="Performance" />
 
-      <section className="container" style={{ paddingBottom: 64 }}>
-        <div className="bento-grid fade-in" style={{ marginBottom: 48 }}>
+      <div className="bento-grid fade-in" style={{ marginTop: 24, marginBottom: 48 }}>
           <div className="card">
             <div className="stat-value">{stats.count}</div>
             <div className="stat-label">Transactions</div>
@@ -95,7 +94,6 @@ export default async function PerformancePage({ params }: PageProps) {
             )}
           </>
         )}
-      </section>
     </main>
   );
 }

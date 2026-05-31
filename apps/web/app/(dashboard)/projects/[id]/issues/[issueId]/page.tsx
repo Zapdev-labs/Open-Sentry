@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getIssue, getIssueEvents, getIssueEventTimeline, getProject } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
-import { ProjectNav } from "@/components/project-nav";
+import { PageHeaderBar } from "@/components/page-header-bar";
 import { IssueActions } from "@/components/issue-actions";
 import { IssueEventExplorer } from "@/components/issue-event-explorer";
 import { IssueTimelineChart } from "@/components/issue-timeline-chart";
@@ -31,10 +31,10 @@ export default async function IssueDetailPage({ params }: PageProps) {
   ]);
 
   return (
-    <main>
-      <ProjectNav projectId={id} active="issues" />
+    <main className="dash-page">
+      <PageHeaderBar title="Issue detail" />
 
-      <section className="container container-wide" style={{ paddingBottom: 64 }}>
+      <section style={{ paddingBottom: 64 }}>
         <div className="fade-in" style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
             <span className={`badge badge-${issue.status}`}>{issue.status}</span>

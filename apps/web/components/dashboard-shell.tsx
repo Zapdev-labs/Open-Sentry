@@ -1,16 +1,9 @@
-import Link from "next/link";
-import { Bug } from "@phosphor-icons/react/dist/ssr";
+import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { AppSidebar } from "@/components/app-sidebar";
 import { OrgSwitcher } from "@/components/org-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { UserMenu } from "@/components/user-menu";
-
-const navLinks = [
-  { href: "/", label: "Overview" },
-  { href: "/team", label: "Team" },
-  { href: "/docs/overview", label: "Docs" },
-];
+import { SidebarProjectProvider } from "@/components/project-scope";
 
 export async function DashboardShell({ children }: { children: React.ReactNode }) {
   const requestHeaders = await headers();
@@ -19,43 +12,29 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
     ? await auth.api.listOrganizations({ headers: requestHeaders })
     : [];
 
+  const userInitials = session?.user.name?.charAt(0).toUpperCase() ?? "?";
+
   return (
-    <div className="dashboard-shell">
-      <header className="dashboard-header">
-        <div className="dashboard-header-inner">
-          <div className="dashboard-header-left">
-            <Link href="/" className="dashboard-brand">
-              <Bug size={22} weight="bold" />
-              <span>Open Sentry</span>
-            </Link>
-            {session && organizations.length > 0 && (
-              <OrgSwitcher
-                organizations={organizations}
-                activeOrganizationId={session.session.activeOrganizationId ?? null}
-              />
-            )}
-          </div>
-          <nav className="dashboard-nav">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="dashboard-nav-link">
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          {session && (
-            <div className="dashboard-header-actions">
-              <ThemeToggle />
-              <UserMenu
-                name={session.user.name}
-                email={session.user.email}
-                image={session.user.image}
-              />
+    <SidebarProjectProvider>
+      <div className="dash-layout">
+        <Suspense fallback={<aside className="dash-icon-rail" />}>
+          <AppSidebar userInitials={userInitials} />
+        </Suspense>
+
+        <div className="dash-main">
+          {session && organizations.length > 0 && (
+            <div className="dash-topbar">
+              <Suspense fallback={null}>
+                <OrgSwitcher
+                  organizations={organizations}
+                  activeOrganizationId={session.session.activeOrganizationId ?? null}
+                />
+              </Suspense>
             </div>
           )}
-          {!session && <ThemeToggle />}
+          <div className="dash-content">{children}</div>
         </div>
-      </header>
-      <div className="dashboard-content">{children}</div>
-    </div>
+      </div>
+    </SidebarProjectProvider>
   );
 }
