@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, Bug, ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function DocsHeader() {
   return (
@@ -17,6 +18,7 @@ export function DocsHeader() {
           </span>
         </div>
         <nav className="docs-header-nav">
+          <ThemeToggle />
           <Link href="/docs/api-reference" className="docs-header-link">
             API
           </Link>

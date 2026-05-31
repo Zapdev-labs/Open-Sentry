@@ -3,6 +3,7 @@ import { Bug } from "@phosphor-icons/react/dist/ssr";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { OrgSwitcher } from "@/components/org-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/user-menu";
 
 const navLinks = [
@@ -42,12 +43,16 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
             ))}
           </nav>
           {session && (
-            <UserMenu
-              name={session.user.name}
-              email={session.user.email}
-              image={session.user.image}
-            />
+            <div className="dashboard-header-actions">
+              <ThemeToggle />
+              <UserMenu
+                name={session.user.name}
+                email={session.user.email}
+                image={session.user.image}
+              />
+            </div>
           )}
+          {!session && <ThemeToggle />}
         </div>
       </header>
       <div className="dashboard-content">{children}</div>

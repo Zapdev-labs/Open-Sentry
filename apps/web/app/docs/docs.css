@@ -8,7 +8,7 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  background: rgba(251, 251, 250, 0.92);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
@@ -128,8 +128,8 @@
 }
 
 .docs-sidebar-link:hover {
-  border-color: rgba(0, 0, 0, 0.12);
-  background: #f9f9f8;
+  border-color: var(--text-muted);
+  background: var(--surface-hover);
 }
 
 .docs-sidebar-link.active {
@@ -312,7 +312,7 @@
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   font-weight: 500;
-  background: #f9f9f8;
+  background: var(--surface-hover);
 }
 
 .docs-table td {
@@ -326,7 +326,7 @@
 }
 
 .docs-table tr:hover td {
-  background: rgba(0, 0, 0, 0.015);
+  background: var(--hover-overlay);
 }
 
 .docs-prose strong {

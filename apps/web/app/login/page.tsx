@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, signUp } from "@/lib/auth-client";
 import { GithubLogo } from "@phosphor-icons/react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type AuthMode = "sign-in" | "sign-up";
 
@@ -67,7 +68,10 @@ function AuthForm() {
     <main className="auth-page">
       <div className="auth-card fade-in">
         <div className="auth-header">
-          <h1>{mode === "sign-in" ? "Welcome back" : "Create account"}</h1>
+          <div className="auth-header-row">
+            <h1>{mode === "sign-in" ? "Welcome back" : "Create account"}</h1>
+            <ThemeToggle />
+          </div>
           <p className="meta">
             {mode === "sign-in"
               ? "Sign in to your monitoring workspace."
