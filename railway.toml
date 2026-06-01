@@ -1,0 +1,4 @@
+[build.variables]
+DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+BETTER_AUTH_SECRET = "build-placeholder-secret-not-used-at-runtime"
+NEXT_PUBLIC_APP_URL = "http://localhost:3000"
