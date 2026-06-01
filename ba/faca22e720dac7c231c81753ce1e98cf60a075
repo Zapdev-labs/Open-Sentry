@@ -1,0 +1,67 @@
+packages/db/migrations/0005_uptime_monitoring.sql
+  e0edb35467c1270c 1-53
+apps/web/app/api/projects/[id]/uptime/[monitorId]/route.ts
+  e0edb35467c1270c 1-27
+packages/db/src/uptime.ts
+  e0edb35467c1270c 1-105
+apps/web/app/api/projects/[id]/uptime/route.ts
+  e0edb35467c1270c 1-67
+apps/web/components/uptime-monitor-controls.tsx
+  e0edb35467c1270c 1-132
+apps/worker/src/uptime.ts
+  e0edb35467c1270c 1-143
+packages/db/migrations/meta/0005_snapshot.json
+  e0edb35467c1270c 1-2046
+packages/db/test/uptime.test.ts
+  e0edb35467c1270c 1-123
+apps/web/lib/uptime.ts
+  e0edb35467c1270c 1-137
+apps/web/app/(dashboard)/projects/[id]/uptime/page.tsx
+  e0edb35467c1270c 1-176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "bafaca22e720dac7c231c81753ce1e98cf60a075",
+  "prompts": {
+    "429976d23b00797b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-bd40477a-a3ea-4ee9-8b87-1a6425094cac",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "e0edb35467c1270c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-9061010c-ca23-4510-8854-64a2b5a37610",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 3009,
+      "total_deletions": 0,
+      "accepted_lines": 3009,
+      "overriden_lines": 0
+    },
+    "e44fa1c5ec23a67a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-3038bc10-52e7-4749-98f8-e6c64fe903df",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 266,
+      "total_deletions": 0,
+      "accepted_lines": 266,
+      "overriden_lines": 0
+    }
+  }
+}
