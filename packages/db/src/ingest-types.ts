@@ -59,6 +59,7 @@ export const transactionPayloadSchema = z.object({
   status: z.enum(["ok", "error", "cancelled"]).optional(),
   spans: z.array(spanSchema).optional(),
   environment: z.string().optional(),
+  release: z.string().optional(),
   timestamp: z.string().optional(),
 });
 

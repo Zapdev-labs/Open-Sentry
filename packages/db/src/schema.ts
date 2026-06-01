@@ -16,7 +16,22 @@ export const issueStatusEnum = pgEnum("issue_status", ["open", "resolved", "igno
 export const issueLevelEnum = pgEnum("issue_level", ["fatal", "error", "warning", "info", "debug"]);
 export const transactionStatusEnum = pgEnum("transaction_status", ["ok", "error", "cancelled"]);
 export const aiGenerationStatusEnum = pgEnum("ai_generation_status", ["ok", "error"]);
-export const integrationProviderEnum = pgEnum("integration_provider", ["linear"]);
+export const integrationProviderEnum = pgEnum("integration_provider", [
+  "linear",
+  "slack",
+  "discord",
+  "msteams",
+  "pagerduty",
+  "webhook",
+  "email",
+]);
+export const uptimeMonitorStatusEnum = pgEnum("uptime_monitor_status", [
+  "up",
+  "down",
+  "paused",
+  "unknown",
+]);
+export const uptimeCheckStatusEnum = pgEnum("uptime_check_status", ["up", "down"]);
 
 export const projects = pgTable(
   "projects",
@@ -47,6 +62,11 @@ export const issues = pgTable(
     firstSeen: timestamp("first_seen", { withTimezone: true }).notNull().defaultNow(),
     lastSeen: timestamp("last_seen", { withTimezone: true }).notNull().defaultNow(),
     eventCount: integer("event_count").notNull().default(1),
+    firstRelease: text("first_release"),
+    lastRelease: text("last_release"),
+    regressionOf: uuid("regression_of"),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedBy: text("resolved_by"),
   },
   (table) => [
     uniqueIndex("issues_project_fingerprint_idx").on(table.projectId, table.fingerprint),
@@ -54,6 +74,7 @@ export const issues = pgTable(
     index("issues_open_partial_idx")
       .on(table.projectId, table.lastSeen)
       .where(sql`${table.status} = 'open'`),
+    index("issues_first_release_idx").on(table.projectId, table.firstRelease),
   ]
 );
 
@@ -94,11 +115,13 @@ export const transactions = pgTable(
     durationMs: integer("duration_ms").notNull(),
     status: transactionStatusEnum("status").notNull().default("ok"),
     environment: text("environment"),
+    release: text("release"),
     timestamp: timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("transactions_project_timestamp_idx").on(table.projectId, table.timestamp),
     index("transactions_trace_id_idx").on(table.traceId),
+    index("transactions_project_release_idx").on(table.projectId, table.release),
   ]
 );
 
@@ -189,6 +212,61 @@ export const aiGenerations = pgTable(
   ]
 );
 
+export const uptimeMonitors = pgTable(
+  "uptime_monitors",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    url: text("url").notNull(),
+    method: text("method").notNull().default("GET"),
+    intervalSeconds: integer("interval_seconds").notNull().default(60),
+    timeoutMs: integer("timeout_ms").notNull().default(10000),
+    expectedStatus: integer("expected_status").notNull().default(200),
+    failureThreshold: integer("failure_threshold").notNull().default(2),
+    headers: jsonb("headers").$type<Record<string, string>>().notNull().default({}),
+    enabled: boolean("enabled").notNull().default(true),
+    currentStatus: uptimeMonitorStatusEnum("current_status").notNull().default("unknown"),
+    consecutiveFailures: integer("consecutive_failures").notNull().default(0),
+    lastCheckedAt: timestamp("last_checked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("uptime_monitors_project_id_idx").on(table.projectId)]
+);
+
+export const uptimeChecks = pgTable(
+  "uptime_checks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    monitorId: uuid("monitor_id")
+      .notNull()
+      .references(() => uptimeMonitors.id, { onDelete: "cascade" }),
+    status: uptimeCheckStatusEnum("status").notNull(),
+    httpStatus: integer("http_status"),
+    responseMs: integer("response_ms"),
+    error: text("error"),
+    checkedAt: timestamp("checked_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("uptime_checks_monitor_checked_at_idx").on(table.monitorId, table.checkedAt)]
+);
+
+export const uptimeIncidents = pgTable(
+  "uptime_incidents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    monitorId: uuid("monitor_id")
+      .notNull()
+      .references(() => uptimeMonitors.id, { onDelete: "cascade" }),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    cause: text("cause"),
+  },
+  (table) => [index("uptime_incidents_monitor_started_at_idx").on(table.monitorId, table.startedAt)]
+);
+
 export interface StackFrame {
   filename?: string;
   function?: string;
@@ -219,3 +297,6 @@ export type Span = typeof spans.$inferSelect;
 export type AiGeneration = typeof aiGenerations.$inferSelect;
 export type ProjectIntegration = typeof projectIntegrations.$inferSelect;
 export type IssueExternalLink = typeof issueExternalLinks.$inferSelect;
+export type UptimeMonitor = typeof uptimeMonitors.$inferSelect;
+export type UptimeCheck = typeof uptimeChecks.$inferSelect;
+export type UptimeIncident = typeof uptimeIncidents.$inferSelect;

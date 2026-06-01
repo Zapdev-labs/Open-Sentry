@@ -2,8 +2,9 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 import * as authSchema from "./auth-schema";
+import * as enterpriseSchema from "./schema-enterprise";
 
-const fullSchema = { ...schema, ...authSchema };
+const fullSchema = { ...schema, ...authSchema, ...enterpriseSchema };
 
 export type Database = ReturnType<typeof createDb>["db"];
 
@@ -26,9 +27,12 @@ export function getDb(connectionString?: string): Database {
   return drizzle(sharedClient, { schema: fullSchema });
 }
 
-export { schema, authSchema, fullSchema };
+export { schema, authSchema, enterpriseSchema, fullSchema };
 export * from "./schema";
+export * from "./auth-schema";
+export * from "./schema-enterprise";
 export * from "./grouping";
 export * from "./ingest-types";
 export * from "./lookup";
 export * from "./integration-types";
+export * from "./uptime";

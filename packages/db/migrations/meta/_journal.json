@@ -36,6 +36,20 @@
       "when": 1748985600000,
       "tag": "0004_ai_cache_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780305546634,
+      "tag": "0005_uptime_monitoring",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780306778110,
+      "tag": "0006_known_pride",
+      "breakpoints": true
     }
   ]
 }

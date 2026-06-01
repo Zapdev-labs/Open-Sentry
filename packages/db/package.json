@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./schema": "./src/schema.ts",
     "./auth-schema": "./src/auth-schema.ts",
+    "./schema-enterprise": "./src/schema-enterprise.ts",
     "./grouping": "./src/grouping.ts"
   },
   "scripts": {
