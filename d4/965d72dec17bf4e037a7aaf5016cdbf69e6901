@@ -1,0 +1,19 @@
+apps/web/railway.toml
+  s_5c7745e67bd422::t_808467f0bc0279 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d4965d72dec17bf4e037a7aaf5016cdbf69e6901",
+  "prompts": {},
+  "sessions": {
+    "s_5c7745e67bd422": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17d825828ffeJZDb3jyLAUd5kG",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    }
+  }
+}
