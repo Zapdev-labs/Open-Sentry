@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getProject } from "@/lib/queries";
 import { getLinearIntegration, upsertLinearIntegration } from "@/lib/integrations";
 import { requireOrganizationId } from "@/lib/session-org";
+import { recordAudit } from "@/lib/audit";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -47,6 +48,15 @@ export async function PUT(request: Request, { params }: RouteParams) {
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
+
+    await recordAudit({
+      organizationId,
+      action: "project.settings_updated",
+      targetType: "project",
+      targetId: id,
+      targetLabel: project.name,
+      metadata: { integration: "linear", enabled: body.enabled ?? false },
+    });
 
     const integration = await getLinearIntegration(id);
     return NextResponse.json(integration);

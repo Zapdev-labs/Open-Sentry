@@ -25,7 +25,7 @@ export function DocsHeader() {
           <Link href="/login" className="docs-header-link">
             Sign in
           </Link>
-          <Link href="/" className="btn btn-secondary docs-header-cta">
+          <Link href="/dashboard" className="btn btn-secondary docs-header-cta">
             Dashboard
             <ArrowSquareOut size={16} weight="bold" />
           </Link>

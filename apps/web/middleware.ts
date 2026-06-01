@@ -7,7 +7,8 @@ const PUBLIC_PATHS = ["/login", "/signup", "/docs", "/api/health", "/api/auth"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+  // The marketing landing page is public; it redirects signed-in users to /dashboard itself.
+  if (pathname === "/" || PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 

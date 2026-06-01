@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Bug, ChartLine, Gear, Pulse, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { redirect } from "next/navigation";
+import { ArrowRight, Bug, ChartLine, Gear, Pulse, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 import { ensureActiveOrganization } from "@/lib/session-org";
 import {
   getOrganizationStats,
@@ -7,7 +8,6 @@ import {
   getRecentActivity,
 } from "@/lib/queries";
 import { CreateProjectForm } from "@/components/create-project-form";
-import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -22,75 +22,81 @@ export default async function HomePage() {
     getRecentActivity(organizationId),
   ]);
 
+  const statTiles = [
+    { value: stats.projectCount, label: "Projects" },
+    { value: stats.openIssues, label: "Open issues" },
+    { value: stats.eventsToday, label: "Events today" },
+    { value: `${stats.errorRate}%`, label: "Txn error rate" },
+  ];
+
   return (
     <main className="dash-page">
       <header className="dash-page-header fade-in">
-        <h1 className="dash-page-title">Overview</h1>
+        <div>
+          <h1 className="dash-page-title">Overview</h1>
+          <p className="dash-page-subtitle">Workspace health across all projects in the last 24 hours.</p>
+        </div>
       </header>
-      <p className="meta fade-in" style={{ marginBottom: 24 }}>
-        Workspace health across all projects in the last 24 hours.
-      </p>
 
-      <section style={{ paddingBottom: 48 }}>
-        <div className="stats-grid fade-in" style={{ marginBottom: 32 }}>
-          <div className="card stat-card">
-            <div className="stat-value">{stats.projectCount}</div>
-            <div className="stat-label">Projects</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value">{stats.openIssues}</div>
-            <div className="stat-label">Open issues</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value">{stats.eventsToday}</div>
-            <div className="stat-label">Events today</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value">{stats.errorRate}%</div>
-            <div className="stat-label">Txn error rate</div>
-          </div>
-        </div>
-
-        <div className="dashboard-grid fade-in" style={{ marginBottom: 32 }}>
-          <div className="card" style={{ gridColumn: "span 2" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-              <Bug size={24} weight="bold" />
-              <h2 style={{ fontSize: 20 }}>Error Tracking</h2>
+      <section className="dash-section fade-in">
+        <div className="dash-stat-grid">
+          {statTiles.map((tile) => (
+            <div key={tile.label} className="dash-stat">
+              <span className="dash-stat-value">{tile.value}</span>
+              <span className="dash-stat-label">{tile.label}</span>
             </div>
-            <p className="meta" style={{ marginBottom: 16 }}>
-              {stats.totalIssues} grouped issues across your workspace. {stats.openIssues} still
-              open and need attention.
+          ))}
+        </div>
+      </section>
+
+      <section className="dash-section fade-in">
+        <div className="dash-split">
+          <article className="dash-card dash-card-wide">
+            <div className="dash-card-head">
+              <span className="dash-card-icon">
+                <Bug size={18} weight="bold" />
+              </span>
+              <h2 className="dash-card-title">Error tracking</h2>
+            </div>
+            <p className="dash-card-body">
+              {stats.totalIssues} grouped issues across your workspace. {stats.openIssues} still open
+              and need attention.
             </p>
-            <div className="inline-stats">
+            <div className="dash-card-stats">
               <span>
-                <WarningCircle size={16} weight="bold" /> {stats.openIssues} open
+                <WarningCircle size={15} weight="bold" /> {stats.openIssues} open
               </span>
               <span>
-                <Pulse size={16} weight="bold" /> {stats.eventsToday} events today
+                <Pulse size={15} weight="bold" /> {stats.eventsToday} events today
               </span>
             </div>
-          </div>
-          <div className="card">
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-              <ChartLine size={24} weight="bold" />
-              <h2 style={{ fontSize: 20 }}>Performance</h2>
+          </article>
+          <article className="dash-card">
+            <div className="dash-card-head">
+              <span className="dash-card-icon">
+                <ChartLine size={18} weight="bold" />
+              </span>
+              <h2 className="dash-card-title">Performance</h2>
             </div>
-            <p className="meta">
-              {stats.transactionsToday} transactions recorded in the last 24 hours with a{" "}
-              {stats.errorRate}% failure rate.
+            <p className="dash-card-body">
+              {stats.transactionsToday} transactions in the last 24 hours with a {stats.errorRate}%
+              failure rate.
             </p>
-          </div>
+          </article>
         </div>
+      </section>
 
-        <div className="two-col" style={{ marginBottom: 32 }}>
-          <div className="card fade-in">
-            <h2 style={{ fontSize: 20, marginBottom: 20 }}>Create project</h2>
+      <section className="dash-section fade-in">
+        <div className="dash-split">
+          <article className="dash-card">
+            <h2 className="dash-card-title">Create project</h2>
+            <p className="dash-card-body">Spin up a new project and grab its DSN to start sending events.</p>
             <CreateProjectForm />
-          </div>
-          <div className="card fade-in">
-            <h2 style={{ fontSize: 20, marginBottom: 16 }}>Recent activity</h2>
+          </article>
+          <article className="dash-card">
+            <h2 className="dash-card-title">Recent activity</h2>
             {activity.length === 0 ? (
-              <p className="meta">No events yet. Connect a project to start monitoring.</p>
+              <p className="dash-card-body">No events yet. Connect a project to start monitoring.</p>
             ) : (
               <ul className="activity-feed">
                 {activity.map((item) => (
@@ -104,46 +110,45 @@ export default async function HomePage() {
                 ))}
               </ul>
             )}
-          </div>
+          </article>
         </div>
-
-        {projectSummaries.length > 0 && (
-          <>
-            <h2 style={{ fontSize: 24, marginBottom: 16 }}>Projects</h2>
-            <div className="bento-grid">
-              {projectSummaries.map((project, i) => (
-                <Link
-                  key={project.id}
-                  href={`/projects/${project.id}/overview`}
-                  className="card stagger-item project-card"
-                  style={{ "--index": i } as React.CSSProperties}
-                >
-                  <h3 style={{ fontSize: 18, marginBottom: 8 }}>{project.name}</h3>
-                  <p className="meta" style={{ fontSize: 13 }}>
-                    Created {project.createdAt.toLocaleDateString()}
-                  </p>
-                  <div className="project-metrics">
-                    <span>{project.openIssues} open</span>
-                    <span>{project.totalEvents} events</span>
-                    <span>{project.transactionCount} txns</span>
-                  </div>
-                  <div style={{ marginTop: 16, display: "flex", gap: 16 }}>
-                    <span className="nav-link" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <Bug size={16} weight="bold" /> Issues
-                    </span>
-                    <span className="nav-link" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <ChartLine size={16} weight="bold" /> Performance
-                    </span>
-                    <span className="nav-link" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <Gear size={16} weight="bold" /> Settings
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
       </section>
+
+      {projectSummaries.length > 0 && (
+        <section className="dash-section fade-in">
+          <h2 className="dash-section-heading">Projects</h2>
+          <div className="dash-project-grid">
+            {projectSummaries.map((project, i) => (
+              <Link
+                key={project.id}
+                href={`/projects/${project.id}/overview`}
+                className="dash-project-card stagger-item"
+                style={{ "--index": i } as React.CSSProperties}
+              >
+                <div className="dash-project-card-head">
+                  <h3 className="dash-project-card-title">{project.name}</h3>
+                  <ArrowRight size={16} weight="bold" className="dash-project-card-arrow" />
+                </div>
+                <p className="dash-project-card-meta">
+                  Created {project.createdAt.toLocaleDateString()}
+                </p>
+                <div className="dash-project-card-metrics">
+                  <span>{project.openIssues} open</span>
+                  <span className="issue-meta-sep">·</span>
+                  <span>{project.totalEvents} events</span>
+                  <span className="issue-meta-sep">·</span>
+                  <span>{project.transactionCount} txns</span>
+                </div>
+                <div className="dash-project-card-links">
+                  <span><Bug size={14} weight="bold" /> Issues</span>
+                  <span><ChartLine size={14} weight="bold" /> Performance</span>
+                  <span><Gear size={14} weight="bold" /> Settings</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

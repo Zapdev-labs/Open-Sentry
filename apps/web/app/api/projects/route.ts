@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createProject } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
+import { recordAudit } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +15,14 @@ export async function POST(request: Request) {
     if (!project) {
       return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
     }
+
+    await recordAudit({
+      organizationId,
+      action: "project.created",
+      targetType: "project",
+      targetId: project.id,
+      targetLabel: project.name,
+    });
 
     return NextResponse.json(project, { status: 201 });
   } catch {

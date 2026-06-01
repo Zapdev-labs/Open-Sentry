@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bug, Brain, ChartLine, Gear, SquaresFour } from "@phosphor-icons/react/dist/ssr";
+import { Bug, Brain, ChartLine, Gear, SquaresFour, Tag } from "@phosphor-icons/react/dist/ssr";
 import { getProject } from "@/lib/queries";
 import { requireOrganizationId } from "@/lib/session-org";
 
 interface ProjectNavProps {
   projectId: string;
-  active: "overview" | "issues" | "performance" | "ai" | "settings";
+  active: "overview" | "issues" | "performance" | "releases" | "ai" | "settings";
 }
 
 export async function ProjectNav({ projectId, active }: ProjectNavProps) {
@@ -29,6 +29,12 @@ export async function ProjectNav({ projectId, active }: ProjectNavProps) {
       key: "performance" as const,
     },
     {
+      href: `/projects/${projectId}/releases`,
+      label: "Releases",
+      icon: Tag,
+      key: "releases" as const,
+    },
+    {
       href: `/projects/${projectId}/ai`,
       label: "AI",
       icon: Brain,
@@ -44,7 +50,7 @@ export async function ProjectNav({ projectId, active }: ProjectNavProps) {
 
   return (
     <header className="container page-header fade-in">
-      <Link href="/" className="meta" style={{ fontSize: 13, display: "block", marginBottom: 8 }}>
+      <Link href="/dashboard" className="meta" style={{ fontSize: 13, display: "block", marginBottom: 8 }}>
         All projects
       </Link>
       <h1 style={{ fontSize: 36 }}>{project.name}</h1>

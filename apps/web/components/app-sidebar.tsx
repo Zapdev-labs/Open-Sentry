@@ -3,17 +3,24 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
+  Archive,
+  BellRinging,
   BookOpen,
   Brain,
   Bug,
   CaretDoubleLeft,
   ChartLine,
+  ClipboardText,
   Compass,
   Gear,
   House,
   MagnifyingGlass,
+  Pulse,
   Question,
+  ShieldCheck,
   SquaresFour,
+  Tag,
+  UserCircleGear,
   Users,
 } from "@phosphor-icons/react";
 import { useSidebarProject } from "@/components/project-scope";
@@ -24,7 +31,7 @@ interface AppSidebarProps {
 }
 
 const iconLinks = [
-  { href: "/", label: "Overview", icon: House, match: (p: string) => p === "/" },
+  { href: "/dashboard", label: "Overview", icon: House, match: (p: string) => p === "/dashboard" },
   {
     href: "#issues",
     label: "Issues",
@@ -38,6 +45,12 @@ const iconLinks = [
     match: (p: string) => p.includes("/performance"),
   },
   {
+    href: "#uptime",
+    label: "Uptime",
+    icon: Pulse,
+    match: (p: string) => p.includes("/uptime"),
+  },
+  {
     href: "#ai",
     label: "AI",
     icon: Brain,
@@ -49,11 +62,68 @@ const iconLinks = [
     icon: Compass,
     match: (p: string) => p.includes("/overview"),
   },
+    {
+      href: "/team",
+      label: "Team",
+      icon: Users,
+      match: (p: string) => p.startsWith("/team"),
+    },
+    {
+      href: "/docs/overview",
+      label: "Docs",
+      icon: BookOpen,
+      match: (p: string) => p.startsWith("/docs"),
+    },
+  ];
+
+const orgLevelLinks = [
+  {
+    href: "/dashboard",
+    label: "Overview",
+    icon: House,
+    match: (p: string) => p === "/dashboard",
+  },
+  {
+    href: "/releases",
+    label: "Releases",
+    icon: Tag,
+    match: (p: string) => p.startsWith("/releases"),
+  },
+  {
+    href: "/alerts",
+    label: "Alerts",
+    icon: BellRinging,
+    match: (p: string) => p.startsWith("/alerts"),
+  },
   {
     href: "/team",
     label: "Team",
     icon: Users,
     match: (p: string) => p.startsWith("/team"),
+  },
+  {
+    href: "/settings/audit-log",
+    label: "Audit log",
+    icon: ClipboardText,
+    match: (p: string) => p.startsWith("/settings/audit-log"),
+  },
+  {
+    href: "/settings/retention",
+    label: "Retention",
+    icon: Archive,
+    match: (p: string) => p.startsWith("/settings/retention"),
+  },
+  {
+    href: "/settings/sso",
+    label: "SSO",
+    icon: ShieldCheck,
+    match: (p: string) => p.startsWith("/settings/sso"),
+  },
+  {
+    href: "/settings/scim",
+    label: "SCIM",
+    icon: UserCircleGear,
+    match: (p: string) => p.startsWith("/settings/scim"),
   },
   {
     href: "/docs/overview",
@@ -66,9 +136,10 @@ const iconLinks = [
 function resolveIconHref(link: (typeof iconLinks)[number], projectId: string | undefined) {
   if (link.href === "#issues" && projectId) return `/projects/${projectId}/issues`;
   if (link.href === "#performance" && projectId) return `/projects/${projectId}/performance`;
+  if (link.href === "#uptime" && projectId) return `/projects/${projectId}/uptime`;
   if (link.href === "#ai" && projectId) return `/projects/${projectId}/ai`;
   if (link.href === "#explore" && projectId) return `/projects/${projectId}/overview`;
-  if (link.href.startsWith("#")) return projectId ? `/projects/${projectId}/overview` : "/";
+  if (link.href.startsWith("#")) return projectId ? `/projects/${projectId}/overview` : "/dashboard";
   return link.href;
 }
 
@@ -80,7 +151,7 @@ export function AppSidebar({ userInitials }: AppSidebarProps) {
   return (
     <>
       <aside className="dash-icon-rail" aria-label="Main navigation">
-        <Link href="/" className="dash-logo" aria-label="Open Sentry home">
+        <Link href="/dashboard" className="dash-logo" aria-label="Open Sentry home">
           <Bug size={20} weight="bold" />
         </Link>
 
@@ -139,21 +210,15 @@ function WorkspacePanel({ pathname }: { pathname: string }) {
         </button>
       </div>
       <nav className="dash-panel-nav">
-        <Link href="/" className={`dash-panel-link ${pathname === "/" ? "active" : ""}`}>
-          Overview
-        </Link>
-        <Link
-          href="/team"
-          className={`dash-panel-link ${pathname.startsWith("/team") ? "active" : ""}`}
-        >
-          Team
-        </Link>
-        <Link
-          href="/docs/overview"
-          className={`dash-panel-link ${pathname.startsWith("/docs") ? "active" : ""}`}
-        >
-          Documentation
-        </Link>
+        {orgLevelLinks.map(({ href, label, match }) => (
+          <Link
+            key={label}
+            href={href}
+            className={`dash-panel-link ${match(pathname) ? "active" : ""}`}
+          >
+            {label}
+          </Link>
+        ))}
       </nav>
     </>
   );
@@ -199,6 +264,18 @@ function ProjectPanel({ projectId, projectName }: { projectId: string; projectNa
       active: pathname.includes("/performance"),
     },
     {
+      href: `/projects/${projectId}/releases`,
+      label: "Releases",
+      icon: Tag,
+      active: pathname.includes("/releases"),
+    },
+    {
+      href: `/projects/${projectId}/uptime`,
+      label: "Uptime",
+      icon: Pulse,
+      active: pathname.includes("/uptime"),
+    },
+    {
       href: `/projects/${projectId}/ai`,
       label: "AI analytics",
       icon: Brain,
@@ -215,7 +292,7 @@ function ProjectPanel({ projectId, projectName }: { projectId: string; projectNa
   return (
     <>
       <div className="dash-panel-header">
-        <Link href="/" className="dash-panel-back">
+        <Link href="/dashboard" className="dash-panel-back">
           All projects
         </Link>
         <button type="button" className="dash-collapse-btn" aria-label="Collapse sidebar">
