@@ -1,5 +1,8 @@
 import { Worker } from "bullmq";
 import { processBatch, type IngestJobData } from "./processor";
+import { startUptimeScheduler } from "./uptime";
+import { startRetentionScheduler } from "./retention";
+import { startAlertingScheduler } from "./alerting";
 
 const INGEST_QUEUE = "ingest-events";
 const BATCH_SIZE = 50;
@@ -62,12 +65,22 @@ worker.on("ready", () => {
   console.log("Worker ready, consuming ingest-events queue");
 });
 
+const stopUptimeScheduler = startUptimeScheduler();
+const stopRetentionScheduler = startRetentionScheduler();
+const stopAlertingScheduler = startAlertingScheduler();
+
 process.on("SIGTERM", async () => {
+  stopUptimeScheduler();
+  stopRetentionScheduler();
+  stopAlertingScheduler();
   await flushBatch();
   await worker.close();
 });
 
 process.on("SIGINT", async () => {
+  stopUptimeScheduler();
+  stopRetentionScheduler();
+  stopAlertingScheduler();
   await flushBatch();
   await worker.close();
   process.exit(0);
