@@ -1,0 +1,19 @@
+apps/web/app/page.tsx
+  s_5c7745e67bd422::t_6b9bbfe97f4075 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cba183b5cf11ee554b02d31da0b51ce8976fb4ce",
+  "prompts": {},
+  "sessions": {
+    "s_5c7745e67bd422": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17d825828ffeJZDb3jyLAUd5kG",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    }
+  }
+}
