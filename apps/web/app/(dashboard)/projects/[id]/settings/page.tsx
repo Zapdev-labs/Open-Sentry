@@ -5,6 +5,8 @@ import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { CopyDsn } from "@/components/copy-dsn";
 import { LinearIntegrationForm } from "@/components/linear-integration-form";
+import { DsnKeysView } from "@/components/dsn-keys-view";
+import { listDsnKeys } from "@/lib/queries-tokens";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -18,6 +20,7 @@ export default async function SettingsPage({ params }: PageProps) {
 
   const dsn = buildDsn(project.publicKey);
   const linear = await getLinearIntegration(id);
+  const dsnKeys = await listDsnKeys(id);
   const installCode = `import { init, captureException } from "@zapdev-labs/sentry-clone";
 
 init({
@@ -61,8 +64,16 @@ try {
         </div>
 
         <div className="card fade-in" style={{ marginTop: 24 }}>
-          <h3 style={{ fontSize: 16, marginBottom: 8 }}>Public key</h3>
-          <code className="code-block">{project.publicKey}</code>
+          <h3 style={{ fontSize: 16, marginBottom: 8 }}>Per-environment DSN keys</h3>
+          <p className="meta" style={{ marginBottom: 16 }}>
+            Use separate keys per environment so you can revoke one without touching the others.
+            All keys point to this project.
+          </p>
+          <DsnKeysView
+            projectId={id}
+            initialKeys={dsnKeys}
+            legacyPublicKey={project.publicKey}
+          />
         </div>
 
         <div className="card fade-in" style={{ marginTop: 24 }}>
