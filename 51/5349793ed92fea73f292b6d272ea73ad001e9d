@@ -1,0 +1,52 @@
+apps/web/app/(dashboard)/projects/[id]/releases/page.tsx
+  98c0edfbd3669d76 1-42
+apps/web/app/api/projects/[id]/releases/[version]/route.ts
+  98c0edfbd3669d76 1-55
+apps/web/app/api/projects/[id]/releases/route.ts
+  98c0edfbd3669d76 1-96
+apps/web/components/releases-table.tsx
+  98c0edfbd3669d76 1-253
+apps/web/lib/queries-releases.ts
+  98c0edfbd3669d76 1-323
+apps/web/components/create-release-form.tsx
+  98c0edfbd3669d76 1-171
+apps/web/app/(dashboard)/releases/page.tsx
+  98c0edfbd3669d76 1-28
+apps/web/app/(dashboard)/projects/[id]/releases/[version]/page.tsx
+  98c0edfbd3669d76 1-234
+apps/worker/src/processor.ts
+  98c0edfbd3669d76 1,12-13,70-86,126-184,215
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "515349793ed92fea73f292b6d272ea73ad001e9d",
+  "prompts": {
+    "19338c88e46e6a7a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-4657b382-c993-4a10-a81c-b12ebf182c33",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "98c0edfbd3669d76": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-85b9eb6f-4f72-4d4a-8131-47f7b7fd3335",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 1282,
+      "total_deletions": 1,
+      "accepted_lines": 1282,
+      "overriden_lines": 0
+    }
+  }
+}
