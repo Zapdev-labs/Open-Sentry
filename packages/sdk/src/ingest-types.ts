@@ -61,6 +61,8 @@ export type AiGenerationIngestItem = {
   inputTokens: number;
   outputTokens?: number;
   totalTokens?: number;
+  cachedInputTokens?: number;
+  cacheWriteTokens?: number;
   inputCostUsd?: number;
   outputCostUsd?: number;
   totalCostUsd?: number;

@@ -171,6 +171,8 @@ async function processAiGeneration(
     inputTokens: item.inputTokens,
     outputTokens,
     totalTokens,
+    cachedInputTokens: item.cachedInputTokens ?? 0,
+    cacheWriteTokens: item.cacheWriteTokens ?? 0,
     inputCostUsd: item.inputCostUsd?.toString(),
     outputCostUsd: item.outputCostUsd?.toString(),
     totalCostUsd: item.totalCostUsd?.toString(),

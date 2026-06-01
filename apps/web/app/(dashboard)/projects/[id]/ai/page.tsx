@@ -73,6 +73,19 @@ export default async function AiAnalyticsPage({ params }: PageProps) {
           <div className="stat-value">{stats.errorRate}%</div>
           <div className="stat-label">Error rate</div>
         </div>
+        <div className="card">
+          <div className="stat-value">{stats.cacheHitRate}%</div>
+          <div className="stat-label">Cache hit rate</div>
+        </div>
+        <div className="card">
+          <div className="stat-value">{formatTokens(stats.totalCachedTokens)}</div>
+          <div className="stat-label">
+            Cached tokens
+            <span className="meta" style={{ display: "block", fontSize: 11 }}>
+              {formatTokens(stats.totalCacheWriteTokens)} written
+            </span>
+          </div>
+        </div>
       </div>
 
       {stats.count === 0 ? (
@@ -104,6 +117,7 @@ captureOpenRouterGeneration(response.usage, response.model, {
                   <th>Provider</th>
                   <th>Calls</th>
                   <th>Tokens</th>
+                  <th>Cache hit</th>
                   <th>Cost</th>
                 </tr>
               </thead>
@@ -114,6 +128,12 @@ captureOpenRouterGeneration(response.usage, response.model, {
                     <td className="meta">{row.provider}</td>
                     <td>{row.count}</td>
                     <td>{formatTokens(row.totalTokens)}</td>
+                    <td>
+                      {row.cacheHitRate}%
+                      <span className="meta" style={{ display: "block", fontSize: 11 }}>
+                        {formatTokens(row.cachedTokens)} cached
+                      </span>
+                    </td>
                     <td>
                       <span className="code-block">{formatUsd(row.totalCostUsd)}</span>
                     </td>

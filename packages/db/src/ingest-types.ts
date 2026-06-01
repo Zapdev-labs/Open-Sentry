@@ -69,6 +69,8 @@ export const aiGenerationPayloadSchema = z.object({
   inputTokens: z.number().int().nonnegative(),
   outputTokens: z.number().int().nonnegative().optional(),
   totalTokens: z.number().int().nonnegative().optional(),
+  cachedInputTokens: z.number().int().nonnegative().optional(),
+  cacheWriteTokens: z.number().int().nonnegative().optional(),
   inputCostUsd: z.number().nonnegative().optional(),
   outputCostUsd: z.number().nonnegative().optional(),
   totalCostUsd: z.number().nonnegative().optional(),

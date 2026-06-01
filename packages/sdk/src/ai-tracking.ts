@@ -24,6 +24,8 @@ export interface CaptureGenerationOptions {
   inputTokens: number;
   outputTokens?: number;
   totalTokens?: number;
+  cachedInputTokens?: number;
+  cacheWriteTokens?: number;
   inputCostUsd?: number;
   outputCostUsd?: number;
   totalCostUsd?: number;
@@ -61,6 +63,8 @@ export function buildGenerationItem(
     inputTokens: opts.inputTokens,
     outputTokens,
     totalTokens: opts.totalTokens ?? opts.inputTokens + outputTokens,
+    cachedInputTokens: opts.cachedInputTokens ?? 0,
+    cacheWriteTokens: opts.cacheWriteTokens ?? 0,
     inputCostUsd: opts.inputCostUsd,
     outputCostUsd: opts.outputCostUsd,
     totalCostUsd: opts.totalCostUsd,
@@ -94,6 +98,8 @@ export function usageFromOpenRouter(
     inputTokens,
     outputTokens,
     totalTokens: usage.total_tokens ?? inputTokens + outputTokens,
+    cachedInputTokens: usage.prompt_tokens_details?.cached_tokens ?? 0,
+    cacheWriteTokens: usage.prompt_tokens_details?.cache_write_tokens ?? 0,
     totalCostUsd,
     metadata: {
       cachedTokens: usage.prompt_tokens_details?.cached_tokens,

@@ -341,6 +341,9 @@ export async function getAiGenerationStats(projectId: string): Promise<{
   totalOutputTokens: number;
   avgLatencyMs: number;
   errorRate: number;
+  cacheHitRate: number;
+  totalCachedTokens: number;
+  totalCacheWriteTokens: number;
 }> {
   const [stats] = await db()
     .select({
@@ -349,6 +352,9 @@ export async function getAiGenerationStats(projectId: string): Promise<{
       totalOutputTokens: sql<number>`coalesce(sum(${aiGenerations.outputTokens}), 0)::int`.mapWith(Number),
       avgLatencyMs: sql<number>`coalesce(avg(${aiGenerations.latencyMs}), 0)::int`.mapWith(Number),
       errorCount: sql<number>`count(*) filter (where ${aiGenerations.status} = 'error')::int`.mapWith(Number),
+      cacheHitCount: sql<number>`count(*) filter (where ${aiGenerations.cachedInputTokens} > 0)::int`.mapWith(Number),
+      totalCachedTokens: sql<number>`coalesce(sum(${aiGenerations.cachedInputTokens}), 0)::int`.mapWith(Number),
+      totalCacheWriteTokens: sql<number>`coalesce(sum(${aiGenerations.cacheWriteTokens}), 0)::int`.mapWith(Number),
       totalCostUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
     })
     .from(aiGenerations)
@@ -356,6 +362,7 @@ export async function getAiGenerationStats(projectId: string): Promise<{
 
   const count = stats?.count ?? 0;
   const errorCount = stats?.errorCount ?? 0;
+  const cacheHitCount = stats?.cacheHitCount ?? 0;
 
   return {
     count,
@@ -364,6 +371,9 @@ export async function getAiGenerationStats(projectId: string): Promise<{
     totalOutputTokens: stats?.totalOutputTokens ?? 0,
     avgLatencyMs: stats?.avgLatencyMs ?? 0,
     errorRate: count > 0 ? Math.round((errorCount / count) * 100) : 0,
+    cacheHitRate: count > 0 ? Math.round((cacheHitCount / count) * 100) : 0,
+    totalCachedTokens: stats?.totalCachedTokens ?? 0,
+    totalCacheWriteTokens: stats?.totalCacheWriteTokens ?? 0,
   };
 }
 
@@ -388,7 +398,15 @@ export async function getAiGenerationStatsToday(projectId: string): Promise<{
 }
 
 export async function getAiGenerationByModel(projectId: string): Promise<
-  { model: string; provider: string; count: number; totalCostUsd: number; totalTokens: number }[]
+  {
+    model: string;
+    provider: string;
+    count: number;
+    totalCostUsd: number;
+    totalTokens: number;
+    cachedTokens: number;
+    cacheHitRate: number;
+  }[]
 > {
   const rows = await db()
     .select({
@@ -397,6 +415,8 @@ export async function getAiGenerationByModel(projectId: string): Promise<
       count: sql<number>`count(*)::int`.mapWith(Number),
       totalCostUsd: sql<string>`coalesce(sum(${aiGenerations.totalCostUsd}::numeric), 0)::text`,
       totalTokens: sql<number>`coalesce(sum(${aiGenerations.totalTokens}), 0)::int`.mapWith(Number),
+      cachedTokens: sql<number>`coalesce(sum(${aiGenerations.cachedInputTokens}), 0)::int`.mapWith(Number),
+      cacheHitCount: sql<number>`count(*) filter (where ${aiGenerations.cachedInputTokens} > 0)::int`.mapWith(Number),
     })
     .from(aiGenerations)
     .where(eq(aiGenerations.projectId, projectId))
@@ -409,6 +429,8 @@ export async function getAiGenerationByModel(projectId: string): Promise<
     count: row.count,
     totalCostUsd: parseUsd(row.totalCostUsd),
     totalTokens: row.totalTokens,
+    cachedTokens: row.cachedTokens,
+    cacheHitRate: row.count > 0 ? Math.round((row.cacheHitCount / row.count) * 100) : 0,
   }));
 }
 

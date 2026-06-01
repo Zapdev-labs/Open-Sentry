@@ -167,6 +167,8 @@ export const aiGenerations = pgTable(
     inputTokens: integer("input_tokens").notNull().default(0),
     outputTokens: integer("output_tokens").notNull().default(0),
     totalTokens: integer("total_tokens").notNull().default(0),
+    cachedInputTokens: integer("cached_input_tokens").notNull().default(0),
+    cacheWriteTokens: integer("cache_write_tokens").notNull().default(0),
     inputCostUsd: text("input_cost_usd"),
     outputCostUsd: text("output_cost_usd"),
     totalCostUsd: text("total_cost_usd"),
