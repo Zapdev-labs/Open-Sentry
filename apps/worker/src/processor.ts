@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import {
   createDb,
   computeFingerprint,
@@ -9,6 +9,8 @@ import {
   transactions,
   spans,
   aiGenerations,
+  releases,
+  releaseIssueFirstSeen,
   type IngestItem,
   type Database,
 } from "@sentry-clone/db";
@@ -65,6 +67,23 @@ async function processError(
   const breadcrumbList = normalizeBreadcrumbs(item.breadcrumbs);
   const message = item.exception.value ?? item.message ?? "Unknown error";
 
+  // Pre-query: capture the prior issue state so we can detect regressions and
+  // decide whether this is a brand-new issue (first-seen-in-release wiring).
+  const priorRows = await tx
+    .select({
+      id: issues.id,
+      status: issues.status,
+      resolvedAt: issues.resolvedAt,
+      firstRelease: issues.firstRelease,
+      regressionOf: issues.regressionOf,
+    })
+    .from(issues)
+    .where(and(eq(issues.projectId, projectId), eq(issues.fingerprint, fingerprint)))
+    .limit(1);
+  const prior = priorRows[0] ?? null;
+  const isNewIssue = prior === null;
+  const wasResolved = prior?.resolvedAt != null;
+
   const [issue] = await tx
     .insert(issues)
     .values({
@@ -104,6 +123,65 @@ async function processError(
     timestamp: now,
   });
 
+  // Wire up release tracking (first-seen, last-seen, regression detection).
+  // All of this is best-effort — the release may not exist yet in our system
+  // (the user might not have created it), or this issue may have arrived
+  // without a release tag. We never fail the ingest because of release work.
+  if (item.release) {
+    const releaseRows = await tx
+      .select({ id: releases.id, version: releases.version })
+      .from(releases)
+      .where(
+        and(eq(releases.projectId, projectId), eq(releases.version, item.release))
+      )
+      .limit(1);
+    const release = releaseRows[0] ?? null;
+
+    if (release) {
+      const releasePatch: {
+        lastRelease: string;
+        firstRelease?: string;
+      } = { lastRelease: release.version };
+      if (isNewIssue || !prior?.firstRelease) {
+        releasePatch.firstRelease = release.version;
+      }
+
+      await tx
+        .update(issues)
+        .set(releasePatch)
+        .where(eq(issues.id, issue.id));
+
+      // For new issues, also record the explicit first-seen-in-release link so
+      // the release detail page can show a fast "X new issues" count without
+      // having to re-join the issues table on first_release.
+      if (isNewIssue) {
+        await tx
+          .insert(releaseIssueFirstSeen)
+          .values({
+            projectId,
+            releaseId: release.id,
+            issueId: issue.id,
+          })
+          .onConflictDoNothing();
+      }
+    }
+  }
+
+  // Regression detection: a previously-resolved issue just received a new
+  // event. Reopen it and stamp a self-referencing regressionOf marker so the
+  // dashboard can badge it as a regression.
+  if (wasResolved && !isNewIssue) {
+    await tx
+      .update(issues)
+      .set({
+        status: "open",
+        resolvedAt: null,
+        resolvedBy: null,
+        regressionOf: issue.id,
+      })
+      .where(eq(issues.id, issue.id));
+  }
+
   if (issue.eventCount !== 1) return null;
 
   return {
@@ -134,6 +212,7 @@ async function processTransaction(
       durationMs: item.durationMs,
       status: item.status ?? "ok",
       environment: item.environment,
+      release: item.release,
       timestamp: now,
     })
     .returning({ id: transactions.id });
