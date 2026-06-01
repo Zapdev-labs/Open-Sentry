@@ -1,0 +1,57 @@
+apps/web/components/audit-log-filters.tsx
+  7e0a3f4e29e7936f 1-92
+apps/web/app/api/audit/export/route.ts
+  7e0a3f4e29e7936f 1-76
+apps/web/components/audit-log-table.tsx
+  7e0a3f4e29e7936f 1-86
+apps/web/app/api/audit/route.ts
+  0a45f135525209fc 1-48
+apps/web/app/(dashboard)/settings/audit-log/page.tsx
+  7e0a3f4e29e7936f 1-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "9f17ffef8dd353863ccfa662fbcd949c8ad6d555",
+  "prompts": {
+    "0a45f135525209fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-fed7580a-4480-48cc-a5fb-bfb276e0ffd3",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 48,
+      "overriden_lines": 0
+    },
+    "7e0a3f4e29e7936f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-f5f31793-a81c-43fb-9341-9d06bfc970c6",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 363,
+      "total_deletions": 0,
+      "accepted_lines": 363,
+      "overriden_lines": 0
+    },
+    "b79f3a27d85af68d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-c56594d5-0a74-4755-81a7-b0bc16b9efe8",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
