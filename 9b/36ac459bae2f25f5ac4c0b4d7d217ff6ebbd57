@@ -1,0 +1,305 @@
+apps/web/app/api/alerts/rules/[id]/route.ts
+  bf868e29e0e5b08d 1-135
+apps/web/app/(dashboard)/alerts/channels/new/page.tsx
+  60aaa5c888f2ab24 1-29
+apps/web/components/alert-forms.tsx
+  3c2d8cd9f945bccf 1-640
+apps/web/app/api/alerts/rules/route.ts
+  486e30b57448c7bd 1-98
+apps/web/components/alert-channel-edit-form.tsx
+  a72a387a7a245ca9 132
+  96775f76920a4284 1-15,28-131,133-213
+  e910b58ed3483cdf 16-27
+apps/worker/src/alerting.ts
+  2dbf05d7ef51a62a 1,10
+  70185573d33f9076 2-9,11-389
+apps/web/lib/alert-delivery.ts
+  2d24aebdec0c28f6 1-237
+apps/web/app/(dashboard)/alerts/channels/[id]/page.tsx
+  02e050c7c4606b3a 1-83
+apps/web/app/(dashboard)/alerts/rules/new/page.tsx
+  aab2e57c721929f9 1-40
+apps/web/app/(dashboard)/alerts/rules/[id]/page.tsx
+  e62ef47538f72766 1-124
+apps/web/app/api/alerts/channels/[id]/route.ts
+  cee8cb5fbac86df0 1-136
+apps/web/lib/queries-alerts.ts
+  2d24aebdec0c28f6 1-423
+apps/web/components/alert-lists.tsx
+  8ef68fec67c72c7a 1-414
+apps/web/components/alert-rule-edit-form.tsx
+  675d7b9c435de911 1-280
+apps/web/app/(dashboard)/alerts/page.tsx
+  bfdf50ad961b68d3 1-164
+apps/web/app/api/alerts/channels/route.ts
+  46bf0e153b7e7bc4 1-109
+apps/web/app/api/alerts/deliveries/route.ts
+  8b8c9e81a1b2e702 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "9b36ac459bae2f25f5ac4c0b4d7d217ff6ebbd57",
+  "prompts": {
+    "02e050c7c4606b3a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-9a42aaf6-0ee9-408e-a138-225f527fb2ea",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 83,
+      "overriden_lines": 0
+    },
+    "2d24aebdec0c28f6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-78644783-abbc-4227-8420-7ad338e917f6",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 660,
+      "total_deletions": 0,
+      "accepted_lines": 660,
+      "overriden_lines": 0
+    },
+    "2dbf05d7ef51a62a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-0e6456d9-6033-40fd-bb83-b80235aa4b28",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "3c2d8cd9f945bccf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-ea3a2ba1-2a88-4200-af27-dec94e3f5a1d",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 640,
+      "overriden_lines": 0
+    },
+    "46bf0e153b7e7bc4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-c122fe9e-5d44-4b1b-a2ec-7ce4bd2c00d8",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 109,
+      "overriden_lines": 0
+    },
+    "486e30b57448c7bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-c585a1ee-4c87-4cb1-98f2-a8af2e508885",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 98,
+      "overriden_lines": 0
+    },
+    "60aaa5c888f2ab24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-9d437b9c-8893-4a3f-a6e9-513df9fd67a2",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 29,
+      "overriden_lines": 0
+    },
+    "675d7b9c435de911": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-def3dbcf-a5f7-48d2-bf71-6c86686a0d95",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 280,
+      "overriden_lines": 0
+    },
+    "70185573d33f9076": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-7d4ffcd2-fca8-4325-a698-71dc1300b50e",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 387,
+      "overriden_lines": 0
+    },
+    "8b8c9e81a1b2e702": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-486a52b7-4491-47d8-810e-d9a4e644b730",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 25,
+      "overriden_lines": 0
+    },
+    "8ef68fec67c72c7a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-94c007d8-4594-4ba9-878a-6a109fe46e98",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 414,
+      "overriden_lines": 0
+    },
+    "96775f76920a4284": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-adcfea9d-dc90-414a-830f-42c03fb24093",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 200,
+      "overriden_lines": 0
+    },
+    "a72a387a7a245ca9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-faabadee-abf8-4588-a572-194b8e27457e",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "aab2e57c721929f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-5cdf7a56-becf-4d53-bc37-84cf28ed08a7",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 40,
+      "overriden_lines": 0
+    },
+    "bf868e29e0e5b08d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-fac385a7-2a07-4e10-b616-9401cefe7e6b",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 135,
+      "overriden_lines": 0
+    },
+    "bfdf50ad961b68d3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-176d35bd-a16f-464f-ae27-a2baa16a209f",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 164,
+      "overriden_lines": 0
+    },
+    "cee8cb5fbac86df0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-69225ab2-3f71-45cb-a425-6d7654a0fd3e",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 136,
+      "overriden_lines": 0
+    },
+    "dcc8a851fa8299a8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-2c2cbf98-62c4-4cbd-b8e6-c28310b01515",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "e62ef47538f72766": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-23c473ca-5206-4d49-b86a-c953487b6857",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 124,
+      "overriden_lines": 0
+    },
+    "e910b58ed3483cdf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_17d825828ffeJZDb3jyLAUd5kG-fe521047-8feb-4996-bae1-a784ba8fc40c",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 12,
+      "overriden_lines": 0
+    }
+  }
+}
