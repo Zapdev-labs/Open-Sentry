@@ -6,7 +6,7 @@ import {
   type Breadcrumb,
   type SdkOptions,
 } from "./utils.js";
-import { getScope, setUser, setTag, setTags, clearScope } from "./scope.js";
+import { getScope, setUser, setTag, setTags, setRelease, clearScope } from "./scope.js";
 import { installBreadcrumbIntegrations } from "./integrations.js";
 import { Transport } from "./transport.js";
 import {
@@ -102,7 +102,7 @@ function buildErrorItem(
         )
       : undefined,
     environment: options.environment,
-    release: options.release,
+    release: scope.release ?? options.release,
     timestamp: new Date().toISOString(),
   };
 }
@@ -154,8 +154,8 @@ export function startTransaction(name: string): TransactionHandle {
     name,
     traceId,
     startTime,
-    rootSpanId,
     spans: [],
+    rootSpanId,
   };
 
   const activeSpans = new Map<string, ActiveSpan>();
@@ -165,6 +165,7 @@ export function startTransaction(name: string): TransactionHandle {
       if (!transport) return;
       if (Math.random() > options.tracesSampleRate) return;
 
+      const scope = getScope();
       const durationMs = Math.round(performance.now() - startTime);
       const item: IngestItem = {
         type: "transaction",
@@ -173,6 +174,7 @@ export function startTransaction(name: string): TransactionHandle {
         durationMs,
         status,
         environment: options.environment,
+        release: scope.release ?? options.release,
         spans: tx.spans.map((s) => ({
           spanId: s.spanId,
           op: s.op,
@@ -263,7 +265,7 @@ function installNodeExitHandler(): void {
 }
 
 export { parseDsn } from "./utils.js";
-export { setUser, setTag, setTags, clearScope } from "./scope.js";
+export { setUser, setTag, setTags, setRelease, clearScope } from "./scope.js";
 export type { SdkOptions, Breadcrumb } from "./utils.js";
 export type { UserContext } from "./scope.js";
 export type {
