@@ -1,0 +1,8 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd ../.. && bun install --frozen-lockfile && bunx turbo run build --filter=@sentry-clone/web..."
+
+[deploy]
+startCommand = "bun run start"
+healthcheckPath = "/login"
+healthcheckTimeout = 60
