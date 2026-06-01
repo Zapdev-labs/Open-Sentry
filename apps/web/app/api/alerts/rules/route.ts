@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireOrgMember, requireOrgAdmin } from "@/lib/permissions";
+import { requireOrgMember, requireOrgAdmin } from "@/lib/clerk-auth";
 import { listAlertRules, createAlertRule } from "@/lib/queries-alerts";
 import { recordAudit } from "@/lib/audit";
 

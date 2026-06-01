@@ -3,7 +3,7 @@ import { Tag, GitBranch } from "@phosphor-icons/react/dist/ssr";
 import { notFound } from "next/navigation";
 import { getProject } from "@/lib/queries";
 import { getRelease, listIssuesForRelease } from "@/lib/queries-releases";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { PageHeaderBar } from "@/components/page-header-bar";
 
 export const dynamic = "force-dynamic";

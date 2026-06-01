@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProject } from "@/lib/queries";
 import { listReleases, createRelease } from "@/lib/queries-releases";
-import { requireOrgMember } from "@/lib/permissions";
+import { requireOrgMember } from "@/lib/clerk-auth";
 import { recordAudit } from "@/lib/audit";
 
 const createSchema = z.object({

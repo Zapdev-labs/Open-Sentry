@@ -1,6 +1,6 @@
 import { headers as nextHeaders } from "next/headers";
 import { getDb, auditLog, type AuditLogEntry } from "@sentry-clone/db";
-import { auth } from "@/lib/auth";
+import { getActorContext } from "@/lib/clerk-auth";
 
 export type AuditAction = AuditLogEntry["action"];
 
@@ -36,19 +36,8 @@ async function resolveRequestContext(): Promise<RequestContext> {
   return { ipAddress, userAgent };
 }
 
-async function resolveActorContext(): Promise<ActorContext> {
-  const requestHeaders = await nextHeaders();
-  const session = await auth.api.getSession({ headers: requestHeaders });
-  return {
-    actorId: session?.user.id ?? null,
-    actorEmail: session?.user.email ?? null,
-  };
-}
-
 /**
- * Append a row to the org audit log. Fire-and-await; never throw to the caller
- * (an audit write failure should not roll back a successful user action, but
- * should be surfaced via console.error so operators can see it).
+ * Append a row to the org audit log. Fire-and-await; never throw to the caller.
  */
 export async function recordAudit(options: AuditOptions): Promise<void> {
   try {
@@ -56,7 +45,7 @@ export async function recordAudit(options: AuditOptions): Promise<void> {
     const actor: ActorContext =
       options.actorId !== undefined
         ? { actorId: options.actorId, actorEmail: options.actorEmail ?? null }
-        : await resolveActorContext();
+        : await getActorContext();
 
     await getDb().insert(auditLog).values({
       organizationId: options.organizationId,

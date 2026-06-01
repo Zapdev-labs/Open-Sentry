@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { listAlertChannels } from "@/lib/queries-alerts";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { CreateChannelForm } from "@/components/alert-forms";

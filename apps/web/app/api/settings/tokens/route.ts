@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireOrgAdmin, requireOrgMember } from "@/lib/permissions";
+import { requireOrgAdmin, requireOrgMember } from "@/lib/clerk-auth";
 import { createApiToken, listApiTokens } from "@/lib/queries-tokens";
 import { recordAudit } from "@/lib/audit";
 

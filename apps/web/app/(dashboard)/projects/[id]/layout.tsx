@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { ProjectScopeRegistrar } from "@/components/project-scope";
 
 export const dynamic = "force-dynamic";

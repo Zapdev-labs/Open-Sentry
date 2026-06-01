@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { organization } from "@/lib/auth-client";
+import { useOrganization } from "@clerk/nextjs";
 
 export function InviteMemberForm() {
   const [email, setEmail] = useState("");
@@ -10,29 +10,28 @@ export function InviteMemberForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const { organization } = useOrganization();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || !organization) return;
 
     setLoading(true);
     setMessage("");
 
-    const result = await organization.inviteMember({
-      email: email.trim(),
-      role,
-    });
-
-    if (result.error) {
-      setMessage(result.error.message ?? "Failed to send invitation");
+    try {
+      await organization.inviteMember({
+        emailAddress: email.trim(),
+        role: role === "admin" ? "org:admin" : "org:member",
+      });
+      setEmail("");
+      setMessage("Invitation sent");
+      router.refresh();
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Failed to send invitation");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setEmail("");
-    setMessage("Invitation sent");
-    setLoading(false);
-    router.refresh();
   }
 
   return (

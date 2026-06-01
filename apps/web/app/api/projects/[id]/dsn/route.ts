@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId, getActorContext } from "@/lib/clerk-auth";
 import { createDsnKey, listDsnKeys } from "@/lib/queries-tokens";
 import { recordAudit } from "@/lib/audit";
 
@@ -34,10 +34,8 @@ export async function POST(request: Request, { params }: RouteParams) {
     const project = await getProject(id, organizationId);
     if (!project) return NextResponse.json({ error: "Project not found" }, { status: 404 });
 
-    const session = await (await import("@/lib/auth")).auth.api.getSession({
-      headers: await (await import("next/headers")).headers(),
-    });
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const actor = await getActorContext();
+    if (!actor.actorId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json();
     const parsed = createSchema.safeParse(body);
@@ -52,7 +50,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       projectId: id,
       environment: parsed.data.environment,
       label: parsed.data.label,
-      createdBy: session.user.id,
+      createdBy: actor.actorId,
     });
 
     await recordAudit({

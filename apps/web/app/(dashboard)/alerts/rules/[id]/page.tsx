@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { getAlertRule, listAlertChannels, listAlertDeliveries } from "@/lib/queries-alerts";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { AlertRuleForm } from "@/components/alert-rule-edit-form";

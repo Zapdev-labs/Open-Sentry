@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { revokeDsnKey } from "@/lib/queries-tokens";
 import { recordAudit } from "@/lib/audit";
 

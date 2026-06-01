@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProject, getTransactions, getTransactionStats, getTransactionSpans } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { PageHeaderBar } from "@/components/page-header-bar";
 
 interface PageProps {

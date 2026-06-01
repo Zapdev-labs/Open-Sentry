@@ -1,4 +1,4 @@
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { ApiTokensView } from "@/components/api-tokens-view";
 import { listApiTokens } from "@/lib/queries-tokens";

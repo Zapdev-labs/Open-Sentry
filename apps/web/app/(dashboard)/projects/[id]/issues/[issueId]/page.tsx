@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getIssue, getIssueEvents, getIssueEventTimeline, getProject } from "@/lib/queries";
 import { getIssueExternalLinks } from "@/lib/integrations";
-import { requireOrganizationId } from "@/lib/session-org";
+import { requireOrganizationId } from "@/lib/clerk-auth";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { IssueActions } from "@/components/issue-actions";
 import { IssueEventExplorer } from "@/components/issue-event-explorer";

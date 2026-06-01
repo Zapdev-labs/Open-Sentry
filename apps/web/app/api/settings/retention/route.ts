@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireOrgMember, requireOrgAdmin } from "@/lib/permissions";
+import { requireOrgMember, requireOrgAdmin } from "@/lib/clerk-auth";
 import {
   listRetentionPolicies,
   upsertRetentionPolicy,

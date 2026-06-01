@@ -1,18 +1,13 @@
 import { Suspense } from "react";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { AppSidebar } from "@/components/app-sidebar";
 import { OrgSwitcher } from "@/components/org-switcher";
 import { SidebarProjectProvider } from "@/components/project-scope";
 
 export async function DashboardShell({ children }: { children: React.ReactNode }) {
-  const requestHeaders = await headers();
-  const session = await auth.api.getSession({ headers: requestHeaders });
-  const organizations = session
-    ? await auth.api.listOrganizations({ headers: requestHeaders })
-    : [];
-
-  const userInitials = session?.user.name?.charAt(0).toUpperCase() ?? "?";
+  const { userId, orgId } = await auth();
+  const user = await currentUser();
+  const userInitials = (user?.firstName ?? user?.username ?? "?").charAt(0).toUpperCase();
 
   return (
     <SidebarProjectProvider>
@@ -22,13 +17,10 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
         </Suspense>
 
         <div className="dash-main">
-          {session && organizations.length > 0 && (
+          {userId && orgId && (
             <div className="dash-topbar">
               <Suspense fallback={null}>
-                <OrgSwitcher
-                  organizations={organizations}
-                  activeOrganizationId={session.session.activeOrganizationId ?? null}
-                />
+                <OrgSwitcher activeOrganizationId={orgId} />
               </Suspense>
             </div>
           )}

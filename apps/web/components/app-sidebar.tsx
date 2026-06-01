@@ -17,10 +17,8 @@ import {
   MagnifyingGlass,
   Pulse,
   Question,
-  ShieldCheck,
   SquaresFour,
   Tag,
-  UserCircleGear,
   Users,
 } from "@phosphor-icons/react";
 import { useSidebarProject } from "@/components/project-scope";
@@ -112,18 +110,6 @@ const orgLevelLinks = [
     label: "Retention",
     icon: Archive,
     match: (p: string) => p.startsWith("/settings/retention"),
-  },
-  {
-    href: "/settings/sso",
-    label: "SSO",
-    icon: ShieldCheck,
-    match: (p: string) => p.startsWith("/settings/sso"),
-  },
-  {
-    href: "/settings/scim",
-    label: "SCIM",
-    icon: UserCircleGear,
-    match: (p: string) => p.startsWith("/settings/scim"),
   },
   {
     href: "/docs/overview",

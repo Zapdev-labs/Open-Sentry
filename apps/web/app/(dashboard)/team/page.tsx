@@ -1,20 +1,18 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ensureActiveOrganization } from "@/lib/session-org";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { InviteMemberForm } from "@/components/invite-member-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function TeamPage() {
-  const orgContext = await ensureActiveOrganization();
-  if (!orgContext) notFound();
+  const { orgId } = await auth();
+  if (!orgId) notFound();
 
-  const requestHeaders = await headers();
-  const org = await auth.api.getFullOrganization({ headers: requestHeaders });
-
-  if (!org) notFound();
+  const client = await clerkClient();
+  const [org, memberships] = await Promise.all([
+    client.organizations.getOrganization({ organizationId: orgId }),
+    client.organizations.getOrganizationMembershipList({ organizationId: orgId }),
+  ]);
 
   return (
     <main className="dash-page">
@@ -29,7 +27,7 @@ export default async function TeamPage() {
         <div className="two-col">
           <div className="card fade-in">
             <h2 style={{ fontSize: 20, marginBottom: 16 }}>Members</h2>
-            {org.members.length === 0 ? (
+            {memberships.data.length === 0 ? (
               <p className="meta">No members yet.</p>
             ) : (
               <table className="table-editorial">
@@ -41,12 +39,16 @@ export default async function TeamPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {org.members.map((member) => (
-                    <tr key={member.id}>
-                      <td style={{ fontWeight: 500 }}>{member.user.name}</td>
-                      <td className="meta">{member.user.email}</td>
+                  {memberships.data.map((m) => (
+                    <tr key={m.id}>
+                      <td style={{ fontWeight: 500 }}>
+                        {m.publicUserData?.firstName
+                          ? `${m.publicUserData.firstName}${m.publicUserData.lastName ? ` ${m.publicUserData.lastName}` : ""}`
+                          : m.publicUserData?.identifier ?? "—"}
+                      </td>
+                      <td className="meta">{m.publicUserData?.identifier ?? "—"}</td>
                       <td>
-                        <span className="badge badge-level-info">{member.role}</span>
+                        <span className="badge badge-level-info">{m.role.replace("org:", "")}</span>
                       </td>
                     </tr>
                   ))}
@@ -58,24 +60,6 @@ export default async function TeamPage() {
           <div className="card fade-in">
             <h2 style={{ fontSize: 20, marginBottom: 16 }}>Invite member</h2>
             <InviteMemberForm />
-            {org.invitations.length > 0 && (
-              <>
-                <h3 style={{ fontSize: 16, marginTop: 32, marginBottom: 12 }}>Pending invitations</h3>
-                <ul className="activity-feed">
-                  {org.invitations.map((invitation) => (
-                    <li key={invitation.id} className="activity-item">
-                      <div>
-                        <p className="activity-message">{invitation.email}</p>
-                        <span className="meta">{invitation.role ?? "member"}</span>
-                      </div>
-                      <span className={`badge badge-${invitation.status === "pending" ? "open" : "resolved"}`}>
-                        {invitation.status}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
           </div>
         </div>
       </section>
