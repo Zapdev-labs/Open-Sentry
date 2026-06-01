@@ -2,6 +2,11 @@
 builder = "NIXPACKS"
 buildCommand = "cd ../.. && bun install --frozen-lockfile && bunx turbo run build --filter=@sentry-clone/web..."
 
+[build.variables]
+DATABASE_URL = "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+BETTER_AUTH_SECRET = "build-placeholder-secret-not-used-at-runtime"
+NEXT_PUBLIC_APP_URL = "http://localhost:3000"
+
 [deploy]
 startCommand = "bun run start"
 healthcheckPath = "/login"
