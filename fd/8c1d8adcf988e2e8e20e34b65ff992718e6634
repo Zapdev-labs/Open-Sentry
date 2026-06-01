@@ -1,0 +1,67 @@
+apps/web/components/user-menu.tsx
+  s_5c7745e67bd422::t_bedcb7a1d74466 3,5
+  s_a7fb4b8f6f028d::t_4351a7b54e8720 8
+packages/db/src/index.ts
+  s_5c7745e67bd422::t_e7265be8bb89ad 6,29
+apps/web/next.config.ts
+  s_5c7745e67bd422::t_915ab150dc6239 7
+apps/web/app/(dashboard)/dashboard/page.tsx
+  s_5c7745e67bd422::t_f2cae1a08e4777 4
+  s_5c7745e67bd422::t_74e23e4ccd1752 15-16
+apps/web/app/login/page.tsx
+  s_5c7745e67bd422::t_a9927d94336358 1,4,10,13,15-24
+apps/web/components/org-switcher.tsx
+  s_5c7745e67bd422::t_e8a2cd3c06f090 3,9,12-18
+.env.example
+  s_5c7745e67bd422::t_55084752db9da1 6-14,17
+apps/web/app/api/projects/[id]/dsn/route.ts
+  s_5c7745e67bd422::t_41a4e70b231c1e 4
+  s_5c7745e67bd422::t_a42b3d2dc54992 37-38,53
+apps/web/lib/audit.ts
+  s_5c7745e67bd422::t_cf6fc7bb259820 3,40,48
+apps/web/app/layout.tsx
+  s_5c7745e67bd422::t_f48b9d943db7d3 5,24-37
+apps/web/lib/db.ts
+  s_5c7745e67bd422::t_94b4658d4684bf 3,7-8,15
+apps/web/app/page.tsx
+  s_5c7745e67bd422::t_ccdda0f5fb6cd0 54-55
+  s_5c7745e67bd422::t_61de309956f18d 3
+apps/web/middleware.ts
+  s_5c7745e67bd422::t_78433356a44093 1,3-10,12-14,16,19-22
+apps/web/lib/clerk-auth.ts
+  s_5c7745e67bd422::t_6dfab5f3633e05 1-126
+apps/web/app/signup/page.tsx
+  s_5c7745e67bd422::t_fc799c9d4179a1 1-2,5-27
+apps/web/components/invite-member-form.tsx
+  s_5c7745e67bd422::t_0afd247ae6d907 5,13,17,22-32
+apps/web/components/dashboard-shell.tsx
+  s_5c7745e67bd422::t_20cde91d8dfc8f 2,8-10,20,23
+packages/db/src/auth-schema.ts
+  s_5c7745e67bd422::t_87ff3b0e0dc701 1-3
+apps/web/app/(dashboard)/team/page.tsx
+  s_5c7745e67bd422::t_8f337884f3abdc 2,8-9,11-15,30,42-49,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fd8c1d8adcf988e2e8e20e34b65ff992718e6634",
+  "prompts": {},
+  "sessions": {
+    "s_5c7745e67bd422": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17d825828ffeJZDb3jyLAUd5kG",
+        "model": "unknown"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    },
+    "s_a7fb4b8f6f028d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_17d825828ffeJZDb3jyLAUd5kG",
+        "model": "minimax-m3-free"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    }
+  }
+}
