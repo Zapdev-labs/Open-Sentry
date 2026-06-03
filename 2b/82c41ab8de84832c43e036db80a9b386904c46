@@ -1,0 +1,50 @@
+packages/db/src/index.ts
+  s_ac4b0637709315::t_254a28389be626 30,32,34
+  s_ac4b0637709315::t_96f5d6aaf471e4 4,7
+.env.example
+  s_ac4b0637709315::t_eb7be60ea1256d 10-11
+packages/db/migrations/meta/_journal.json
+  s_ac4b0637709315::t_17664af9fb8427 53-59
+packages/db/src/org-sync.ts
+  s_ac4b0637709315::t_d8f4167dda84f6 148-150
+  s_ac4b0637709315::t_2edf1181061019 1
+  s_ac4b0637709315::t_7d153ee0ee82de 2-147,151-175
+apps/web/app/api/webhooks/clerk/route.ts
+  s_ac4b0637709315::t_5173dbdcf64e63 9,20
+  s_ac4b0637709315::t_497c098bb953a4 102-104
+  s_ac4b0637709315::t_7d92fae708f1b1 105
+  s_ac4b0637709315::t_3158cd7a1611da 1-7,10-13,15,23-101,106-173
+  s_ac4b0637709315::t_034df901dcf2ee 8,14,16-19,21-22
+packages/db/migrations/0007_clerk_org_sync.sql
+  s_ac4b0637709315::t_3c9bd37de54230 1-27
+packages/db/src/auth-schema.ts
+  s_ac4b0637709315::t_65a4fbed409748 1-66
+apps/web/lib/clerk-auth.ts
+  s_ac4b0637709315::t_7c20dc772a35f7 64,67
+  s_ac4b0637709315::t_7750cd5b5d426c 18-25,30
+  s_ac4b0637709315::t_60b7969fffcb7b 3
+  s_ac4b0637709315::t_d14fc7671a1599 134,137
+packages/db/package.json
+  s_ac4b0637709315::t_2001652380665d 16
+apps/web/lib/clerk-org-sync.ts
+  s_ac4b0637709315::t_31f39e438419ba 35
+  s_ac4b0637709315::t_57c84aa7e1b210 37
+  s_ac4b0637709315::t_a8571371619ef2 1-13,21-22,24,26-34,36,38-43,45-73,75-95,98-105,107-131,134-137
+  s_ac4b0637709315::t_02b6f0ba3e37a7 14-18,20,23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "2b82c41ab8de84832c43e036db80a9b386904c46",
+  "prompts": {},
+  "sessions": {
+    "s_ac4b0637709315": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6a74c9a7-9252-4884-8119-1e9f4ef87fdc",
+        "model": "default"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    }
+  }
+}
