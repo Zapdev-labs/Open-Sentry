@@ -13,8 +13,7 @@
   "scripts": {
     "build": "tsc --noEmit",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate",
-    "seed": "bun run src/seed.ts"
+    "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "drizzle-orm": "^0.39.3",

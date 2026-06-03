@@ -15,7 +15,6 @@
     "dev:web": "turbo run dev --filter=@sentry-clone/web",
     "db:generate": "bun run --filter @sentry-clone/db generate",
     "db:migrate": "bun run --filter @sentry-clone/db migrate",
-    "db:seed": "bun run --filter @sentry-clone/db seed",
     "test:smoke": "bun run scripts/smoke-test.ts",
     "test:load": "bun run scripts/load-test.ts"
   },

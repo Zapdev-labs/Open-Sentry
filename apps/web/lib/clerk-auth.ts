@@ -1,5 +1,6 @@
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
+import { ensureOrganizationInDb } from "@/lib/clerk-org-sync";
 
 export const ORG_ROLES = ["owner", "admin", "member"] as const;
 export type OrgRole = (typeof ORG_ROLES)[number];
@@ -14,9 +15,19 @@ export type OrgContext = {
  * Resolve the caller's role in the active organization.
  * Returns null if there is no active session, no active org, or the user is not a member.
  */
+async function syncActiveOrgToDb(userId: string, orgId: string, orgRole?: string | null) {
+  await ensureOrganizationInDb({
+    organizationId: orgId,
+    userId,
+    orgRole: orgRole ?? undefined,
+  });
+}
+
 export async function getOrgRole(): Promise<OrgContext | null> {
   const { userId, orgId, orgRole } = await auth();
   if (!userId || !orgId || !orgRole) return null;
+
+  await syncActiveOrgToDb(userId, orgId, orgRole);
 
   return {
     organizationId: orgId,
@@ -50,9 +61,10 @@ export async function requireOrgMember(): Promise<OrgContext> {
  * Returns the active organization ID. Throws if no active session or org.
  */
 export async function requireOrganizationId(): Promise<string> {
-  const { userId, orgId } = await auth();
+  const { userId, orgId, orgRole } = await auth();
   if (!userId) throw new Error("Unauthorized");
   if (!orgId) throw new Error("No active organization");
+  await syncActiveOrgToDb(userId, orgId, orgRole);
   return orgId;
 }
 
@@ -119,8 +131,9 @@ export async function inviteToOrg(email: string, role: "admin" | "member" = "mem
  * Use in server components/pages that require an org context.
  */
 export async function ensureActiveOrganization(): Promise<string> {
-  const { userId, orgId } = await auth();
+  const { userId, orgId, orgRole } = await auth();
   if (!userId) notFound();
   if (!orgId) notFound();
+  await syncActiveOrgToDb(userId, orgId, orgRole);
   return orgId;
 }
