@@ -1,6 +1,7 @@
 import "server-only";
 import { clerkClient } from "@clerk/nextjs/server";
 import {
+  adoptLegacyOrgsForClerkUser,
   clerkRoleToOrgRole,
   displayNameFromClerkUser,
   getOrganizationById,
@@ -79,6 +80,7 @@ export async function syncClerkMembershipToDb(
     userId,
     role: clerkRoleToOrgRole(role),
   });
+  await adoptLegacyOrgsForClerkUser(userId, organizationId);
 }
 
 /**
@@ -101,6 +103,9 @@ export async function ensureOrganizationInDb(options: {
       options.userId,
       options.orgRole
     );
+  } else if (options.userId) {
+    await syncClerkUserToDb(options.userId);
+    await adoptLegacyOrgsForClerkUser(options.userId, options.organizationId);
   }
 }
 
@@ -125,6 +130,7 @@ export async function syncAllOrganizationMembers(organizationId: string): Promis
         userId,
         role: clerkRoleToOrgRole(m.role),
       });
+      await adoptLegacyOrgsForClerkUser(userId, organizationId);
     }
     if (page.data.length < limit) break;
     offset += limit;

@@ -1,5 +1,5 @@
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ensureOrganizationInDb } from "@/lib/clerk-org-sync";
 
 export const ORG_ROLES = ["owner", "admin", "member"] as const;
@@ -11,10 +11,6 @@ export type OrgContext = {
   userId: string;
 };
 
-/**
- * Resolve the caller's role in the active organization.
- * Returns null if there is no active session, no active org, or the user is not a member.
- */
 async function syncActiveOrgToDb(userId: string, orgId: string, orgRole?: string | null) {
   await ensureOrganizationInDb({
     organizationId: orgId,
@@ -36,9 +32,6 @@ export async function getOrgRole(): Promise<OrgContext | null> {
   };
 }
 
-/**
- * Throw if the caller is not an admin (or owner) of the active organization.
- */
 export async function requireOrgAdmin(): Promise<OrgContext> {
   const context = await getOrgRole();
   if (!context) throw new Error("Unauthorized");
@@ -48,18 +41,12 @@ export async function requireOrgAdmin(): Promise<OrgContext> {
   return context;
 }
 
-/**
- * Throw if the caller is not a member of the active organization.
- */
 export async function requireOrgMember(): Promise<OrgContext> {
   const context = await getOrgRole();
   if (!context) throw new Error("Unauthorized");
   return context;
 }
 
-/**
- * Returns the active organization ID. Throws if no active session or org.
- */
 export async function requireOrganizationId(): Promise<string> {
   const { userId, orgId, orgRole } = await auth();
   if (!userId) throw new Error("Unauthorized");
@@ -68,26 +55,17 @@ export async function requireOrganizationId(): Promise<string> {
   return orgId;
 }
 
-/**
- * Map a Clerk org role string ("org:admin" | "org:member") to our OrgRole type.
- */
 function clerkRoleToOrgRole(clerkRole: string): OrgRole {
   if (clerkRole === "org:admin" || clerkRole === "admin:org") return "admin";
   if (clerkRole.endsWith(":owner") || clerkRole === "owner") return "owner";
   return "member";
 }
 
-/**
- * Returns true if the caller has at least the required role.
- */
 export function roleSatisfies(actual: OrgRole, required: OrgRole): boolean {
   const rank: Record<OrgRole, number> = { member: 0, admin: 1, owner: 2 };
   return rank[actual] >= rank[required];
 }
 
-/**
- * Get the current user from Clerk (for audit logging).
- */
 export async function getActorContext() {
   const user = await currentUser();
   return {
@@ -99,9 +77,6 @@ export async function getActorContext() {
   };
 }
 
-/**
- * List all members of the active organization.
- */
 export async function listOrgMembers() {
   const { orgId } = await auth();
   if (!orgId) return [];
@@ -112,9 +87,6 @@ export async function listOrgMembers() {
   return memberships.data;
 }
 
-/**
- * Invite a user to the active organization by email.
- */
 export async function inviteToOrg(email: string, role: "admin" | "member" = "member") {
   const { orgId } = await auth();
   if (!orgId) throw new Error("No active organization");
@@ -127,13 +99,13 @@ export async function inviteToOrg(email: string, role: "admin" | "member" = "mem
 }
 
 /**
- * Ensure the caller has an active organization. Redirects to org creation if not.
- * Use in server components/pages that require an org context.
+ * Ensure the caller has an active organization.
+ * Redirects to org onboarding when signed in but no org is selected/created.
  */
 export async function ensureActiveOrganization(): Promise<string> {
   const { userId, orgId, orgRole } = await auth();
-  if (!userId) notFound();
-  if (!orgId) notFound();
+  if (!userId) redirect("/login");
+  if (!orgId) redirect("/onboarding");
   await syncActiveOrgToDb(userId, orgId, orgRole);
   return orgId;
 }
