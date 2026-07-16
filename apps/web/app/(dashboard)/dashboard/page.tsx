@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowRight, Bug, ChartLine, Gear, Pulse, WarningCircle } from "@phosphor-icons/react/dist/ssr";
-import { ensureActiveOrganization } from "@/lib/clerk-auth";
+import { ensureActiveOrganization } from "@/lib/session-org";
 import {
   getOrganizationStats,
   getProjectSummaries,
@@ -11,8 +12,10 @@ import { CreateProjectForm } from "@/components/create-project-form";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const organizationId = await ensureActiveOrganization();
+  const orgContext = await ensureActiveOrganization();
+  if (!orgContext) redirect("/login");
 
+  const { organizationId } = orgContext;
   const [stats, projectSummaries, activity] = await Promise.all([
     getOrganizationStats(organizationId),
     getProjectSummaries(organizationId),

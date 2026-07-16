@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProject } from "@/lib/queries";
-import { requireOrganizationId, getActorContext } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
+import { getActorContext } from "@/lib/auth";
 import { createDsnKey, listDsnKeys } from "@/lib/queries-tokens";
 import { recordAudit } from "@/lib/audit";
 

@@ -31,7 +31,6 @@ export { schema, authSchema, enterpriseSchema, fullSchema };
 export * from "./schema";
 export * from "./auth-schema";
 export * from "./schema-enterprise";
-export * from "./org-sync";
 export * from "./grouping";
 export * from "./ingest-types";
 export * from "./lookup";

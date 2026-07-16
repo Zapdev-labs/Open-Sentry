@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireOrgMember } from "@/lib/clerk-auth";
+import { requireOrgMember } from "@/lib/permissions";
 import { listAlertDeliveries } from "@/lib/queries-alerts";
 
 export async function GET(request: Request) {

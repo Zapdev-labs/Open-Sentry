@@ -6,7 +6,7 @@
 - Dashboard UI must follow the minimalist-ui skill (warm monochrome palette, Geist/Newsreader fonts, Phosphor Bold icons; no Lucide/Inter/generic shadcn defaults), with Sentry-inspired information architecture (not a pixel-perfect clone) and dark mode support.
 - Verify dashboard routes visually with the user-arch-browser MCP, not cursor-ide-browser.
 - Deploy to Railway and link the GitHub repo `Zapdev-labs/sentry-clone`.
-- Use Clerk with organizations for production dashboard authentication; do not bootstrap orgs/projects via `db:seed`.
+- Use Better Auth with the organization plugin for production dashboard authentication.
 - Do not create unnecessary markdown documentation files.
 - Ingest/API documentation should cover the client ingest HTTP API only, not dashboard auth.
 
@@ -18,7 +18,7 @@
 - Stack: Hono + Bun (ingest), BullMQ + Redis (queue), Next.js 15 (dashboard), Drizzle + PostgreSQL.
 - Railway deploys three services (ingest, worker, web) plus Postgres and Redis plugins via `railway.toml`.
 - Local dependencies: Postgres 16 and Redis 7 via `docker-compose.yml`.
-- Dashboard auth uses Clerk with organizations; projects are scoped to the active organization; the DB keys app data by Clerk org ID (no FK/webhook sync required for basic scoping).
+- Dashboard auth uses Better Auth with organizations; projects are scoped to the active organization.
 - Agent API: Bearer org tokens (`osco_…`) against `/api/v1/*` on the web service; MCP server lives in `packages/mcp`.
 - Published npm SDK package: `@zapdev-labs/sentry-clone`.
 - GitHub remote: `Zapdev-labs/Open-Sentry`.

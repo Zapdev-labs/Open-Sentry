@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProject } from "@/lib/queries";
 import { createUptimeMonitor, getMonitorSummaries } from "@/lib/uptime";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 
 interface RouteParams {
   params: Promise<{ id: string }>;

@@ -1,6 +1,6 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { getDb, auditLog } from "@sentry-clone/db";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { AuditLogTable } from "@/components/audit-log-table";
 import { AuditLogFilters } from "@/components/audit-log-filters";

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProject } from "@/lib/queries";
 import { getLinearIntegration, upsertLinearIntegration } from "@/lib/integrations";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { recordAudit } from "@/lib/audit";
 
 interface RouteParams {

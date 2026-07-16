@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { recordAudit } from "@/lib/audit";
 
 export async function POST(request: Request) {

@@ -1,5 +1,5 @@
 import { listOrgReleases } from "@/lib/queries-releases";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { ReleasesTable } from "@/components/releases-table";
 

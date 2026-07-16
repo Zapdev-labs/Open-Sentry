@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import {
   ArrowRight,
@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Lightning,
 } from "@phosphor-icons/react/dist/ssr";
+import { auth } from "@/lib/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export const dynamic = "force-dynamic";
@@ -51,8 +52,8 @@ const features = [
 ];
 
 export default async function LandingPage() {
-  const { userId } = await auth();
-  if (userId) redirect("/dashboard");
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (session) redirect("/dashboard");
 
   return (
     <div className="landing">

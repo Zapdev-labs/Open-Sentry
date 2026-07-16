@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { listRetentionPolicies } from "@/lib/queries-retention";
 import { getProjects } from "@/lib/queries";
 import { PageHeaderBar } from "@/components/page-header-bar";

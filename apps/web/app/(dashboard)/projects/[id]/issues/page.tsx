@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getIssues, getProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { IssueActions } from "@/components/issue-actions";
 import { IssueFilters } from "@/components/issue-filters";
 import { IssuesEmptyState } from "@/components/issues-empty-state";

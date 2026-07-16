@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 import { getDb, auditLog } from "@sentry-clone/db";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 
 export async function GET(request: Request) {
   try {

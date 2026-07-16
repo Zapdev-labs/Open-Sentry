@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProject, buildDsn } from "@/lib/queries";
 import { getLinearIntegration } from "@/lib/integrations";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { CopyDsn } from "@/components/copy-dsn";
 import { LinearIntegrationForm } from "@/components/linear-integration-form";

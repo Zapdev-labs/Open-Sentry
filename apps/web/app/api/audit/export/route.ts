@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb, auditLog } from "@sentry-clone/db";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { recordAudit } from "@/lib/audit";
 
 function csvEscape(value: unknown): string {

@@ -1,24 +1,34 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/login(.*)",
-  "/signup(.*)",
-  "/docs(.*)",
+const PUBLIC_PATHS = [
+  "/login",
+  "/signup",
+  "/docs",
   "/api/health",
-  "/api/v1/(.*)",
-  "/api/webhooks/(.*)",
-]);
+  "/api/auth",
+  "/api/v1",
+];
 
-export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect();
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // The marketing landing page is public; it redirects signed-in users to /dashboard itself.
+  if (pathname === "/" || PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
   }
-});
+
+  const sessionCookie = getSessionCookie(request);
+  if (!sessionCookie) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

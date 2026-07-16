@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProject } from "@/lib/queries";
 import { getRelease, deleteRelease, listIssuesForRelease } from "@/lib/queries-releases";
-import { requireOrgMember } from "@/lib/clerk-auth";
+import { requireOrgMember } from "@/lib/permissions";
 
 interface RouteParams {
   params: Promise<{ id: string; version: string }>;

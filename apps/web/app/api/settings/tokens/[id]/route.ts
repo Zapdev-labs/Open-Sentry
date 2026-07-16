@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireOrgAdmin } from "@/lib/clerk-auth";
+import { requireOrgAdmin } from "@/lib/permissions";
 import { revokeApiToken } from "@/lib/queries-tokens";
 import { recordAudit } from "@/lib/audit";
 

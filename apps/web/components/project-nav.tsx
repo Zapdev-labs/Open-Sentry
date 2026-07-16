@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Bug, Brain, ChartLine, Gear, SquaresFour, Tag } from "@phosphor-icons/react/dist/ssr";
 import { getProject } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 
 interface ProjectNavProps {
   projectId: string;

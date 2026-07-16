@@ -7,7 +7,7 @@ import {
   getAiGenerationByModel,
   getAiCostTimeline,
 } from "@/lib/queries";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { AiCostTimelineChart } from "@/components/ai-cost-timeline-chart";
 

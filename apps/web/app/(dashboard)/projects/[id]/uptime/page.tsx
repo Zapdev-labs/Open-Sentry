@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { ArrowUpRight, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { getProject } from "@/lib/queries";
 import { getMonitorSummaries, getRecentIncidents, type MonitorSummary } from "@/lib/uptime";
-import { requireOrganizationId } from "@/lib/clerk-auth";
+import { requireOrganizationId } from "@/lib/session-org";
 import { PageHeaderBar } from "@/components/page-header-bar";
 import { CreateMonitorForm, DeleteMonitorButton } from "@/components/uptime-monitor-controls";
 
