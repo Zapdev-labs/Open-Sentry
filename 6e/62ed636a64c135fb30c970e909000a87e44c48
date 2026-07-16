@@ -1,0 +1,76 @@
+apps/web/app/api/v1/projects/route.ts
+  s_64546e8c0f94b6::t_4512a25c5ab600 1-62
+apps/web/package.json
+  s_64546e8c0f94b6::t_69695256e30a59 22
+  s_64546e8c0f94b6::t_3cc47cdaef10c4 23
+apps/web/app/api/v1/org/activity/route.ts
+  s_64546e8c0f94b6::t_93b5b839b80040 1-16
+apps/web/app/api/v1/issues/[issueId]/events/route.ts
+  s_64546e8c0f94b6::t_0bfb45912394af 1-32
+apps/web/app/api/v1/projects/[id]/ai/route.ts
+  s_64546e8c0f94b6::t_23a915197ac8bd 1-38
+packages/mcp/tsconfig.json
+  s_64546e8c0f94b6::t_7cf1068b20bef4 1-9
+apps/web/app/api/v1/projects/[id]/issues/route.ts
+  s_64546e8c0f94b6::t_4c2b2d79f7c40a 1-35
+packages/mcp/src/client.ts
+  s_64546e8c0f94b6::t_4e1bdf3517596e 1-154
+AGENTS.md
+  s_64546e8c0f94b6::t_21878332a1c345 15-16,21
+  s_64546e8c0f94b6::t_dc5fc42578a73c 22-24
+  s_64546e8c0f94b6::t_c676f7416ae9c2 6,9,11,26
+apps/web/app/api/v1/alerts/rules/route.ts
+  s_64546e8c0f94b6::t_04665c6757cf5a 1-26
+.cursor/hooks/state/continual-learning-index.json
+  s_f9046e49c7d1e3::t_b060e084ba4237 3-5,9-14,16-19,24-26,30-38,40
+apps/web/app/api/v1/issues/[issueId]/route.ts
+  s_64546e8c0f94b6::t_44dca4b9c97aca 33
+  s_64546e8c0f94b6::t_f3886ead608a44 1-32,34-53
+packages/mcp/src/index.ts
+  s_64546e8c0f94b6::t_b53958b9e56382 1-46,50-417
+  s_64546e8c0f94b6::t_0489a758ee2661 47-49
+apps/web/app/api/v1/org/stats/route.ts
+  s_64546e8c0f94b6::t_3fef7864efc2fd 1-13
+apps/web/lib/api-v1-auth.ts
+  s_64546e8c0f94b6::t_b25cc58a4364a8 1-83
+packages/mcp/package.json
+  s_64546e8c0f94b6::t_7cc359b27a5589 14
+  s_64546e8c0f94b6::t_7e790153946a0f 1-13,15-16,19-24
+  s_64546e8c0f94b6::t_3cc47cdaef10c4 17-18
+apps/web/app/api/v1/me/route.ts
+  s_64546e8c0f94b6::t_9f1492c007f625 1-18
+apps/web/app/api/v1/projects/[id]/route.ts
+  s_64546e8c0f94b6::t_6b212d33a46619 1-34
+apps/web/middleware.ts
+  s_64546e8c0f94b6::t_f4508c6a3d7205 9
+apps/web/app/api/v1/projects/[id]/performance/route.ts
+  s_64546e8c0f94b6::t_36b1e21b316014 1-30
+bun.lock
+  s_64546e8c0f94b6::t_f7b57932685ebf 48,109-123,196-197,250-251,294-295,346-351,362-363,372-377,398-407,410-411,426-427,438-443,448-453,458-459,464-469,472-475,478-479,482-483,486-491,494-495,500-503,510-515,524-527,538-541,552-553,556-557,560-563,576-577,608-611,668-671,688-689,698-703,708-713,732-733,750-751,754-759,782-783,786-787,790-791,796-799,802-803,806-809,812-819,838-839,858-859,870-871,888-889,892-893,906-907,912-919,922-923,926-927,973-974
+.cursor/hooks/state/continual-learning.json
+  s_64546e8c0f94b6::t_43e5d69af0fcaf 3-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "6e62ed636a64c135fb30c970e909000a87e44c48",
+  "prompts": {},
+  "sessions": {
+    "s_64546e8c0f94b6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "42a286d9-1c74-4405-9ad5-0e3e53c8f92f",
+        "model": "grok-4.5"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    },
+    "s_f9046e49c7d1e3": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5175b0b6-60ed-4706-a090-b282173a5ea8",
+        "model": "cursor-grok-4.5-high"
+      },
+      "human_author": "Jackson57279 <otdoges@proton.me>"
+    }
+  }
+}
